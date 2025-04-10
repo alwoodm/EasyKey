@@ -1,2 +1,3 @@
-# Password_Generator
-"Password Generator" is a simple program that generates random passwords
+# EasyKey - Wieloplatformowy Generator Haseł
+
+EasyKey to aplikacja do generowania bezpiecznych, losowych haseł, dostępna na platformach mobilnych (iOS, Android) oraz desktopowych (Windows, macOS, Linux).
