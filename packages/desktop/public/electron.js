@@ -20,6 +20,10 @@ function createWindow() {
     }
   });
 
+  // Always hide the menu bar, both in dev and production
+  Menu.setApplicationMenu(null);
+  mainWindow.setMenuBarVisibility(false);
+
   // Load app
   let appPath;
   let forceRenderPath = '';
@@ -142,12 +146,6 @@ function createWindow() {
   // Set application name
   app.setName("EasyKey");
   mainWindow.setTitle("EasyKey");
-
-  // Forcefully hide menu bar in production
-  mainWindow.setMenuBarVisibility(isDev);
-  if (!isDev) {
-    Menu.setApplicationMenu(null);
-  }
 
   // Open developer tools only in dev mode
   if (isDev) {

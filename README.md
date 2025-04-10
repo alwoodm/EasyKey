@@ -8,6 +8,14 @@ EasyKey is an application for generating secure, random passwords, available on 
 - **Desktop (Windows, macOS, Linux)**: React with Electron
 - **Shared code**: Library of common components and logic
 
+## Features
+
+- Generate secure random passwords
+- Customize password length and character sets
+- Light and dark theme support
+- Copy passwords to clipboard with one click
+- Multi-language support (English, Polish)
+
 ## Project Structure
 
 ```

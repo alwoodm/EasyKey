@@ -48,15 +48,222 @@
       min-width: 300px;
       display: none;
     }
+    .language-dropdown {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+    .language-button {
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+    .language-menu {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 4px;
+      background-color: #333;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      display: none;
+      overflow: hidden;
+      max-height: 300px;
+      overflow-y: auto;
+      width: 180px;
+    }
+    .language-menu.show {
+      display: block;
+    }
+    .language-option {
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s;
+      white-space: nowrap;
+      text-align: left;
+      color: white;
+      background: none;
+      border: none;
+      width: 100%;
+    }
+    .language-option:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    .language-flag {
+      margin-right: 8px;
+      font-size: 1.2em;
+    }
+    .dropdown-arrow {
+      margin-left: 8px;
+      font-size: 0.7em;
+    }
   </style>
 </head>
 <body>
-  <h1>EasyKey Password Generator</h1>
-  <p>Simple and secure password generation</p>
+  <div class="language-dropdown">
+    <button id="language-btn" class="language-button">
+      <span id="current-flag">🇬🇧</span>
+      <span id="current-language">English</span>
+      <span class="dropdown-arrow">▼</span>
+    </button>
+    <div id="language-menu" class="language-menu">
+      <!-- Language options will be generated dynamically -->
+    </div>
+  </div>
+  
+  <h1 id="title">EasyKey Password Generator</h1>
+  <p id="subtitle">Simple and secure password generation</p>
   <button id="generate-btn">Generate Password</button>
   <div id="password-output"></div>
 
   <script>
+    // Translations
+    const translations = {
+      en: {
+        name: "English",
+        flag: "🇬🇧",
+        title: "EasyKey Password Generator",
+        subtitle: "Simple and secure password generation",
+        generateBtn: "Generate Password",
+        error: "Error generating password: ",
+        copied: "Copied!"
+      },
+      pl: {
+        name: "Polski",
+        flag: "🇵🇱",
+        title: "EasyKey Generator Haseł",
+        subtitle: "Proste i bezpieczne generowanie haseł",
+        generateBtn: "Generuj Hasło",
+        error: "Błąd generowania hasła: ",
+        copied: "Skopiowano!"
+      },
+      es: {
+        name: "Español",
+        flag: "🇪🇸",
+        title: "EasyKey Generador de Contraseñas",
+        subtitle: "Generación de contraseñas simple y segura",
+        generateBtn: "Generar Contraseña",
+        error: "Error al generar contraseña: ",
+        copied: "¡Copiado!"
+      },
+      de: {
+        name: "Deutsch",
+        flag: "🇩🇪",
+        title: "EasyKey Passwortgenerator",
+        subtitle: "Einfache und sichere Passwortgenerierung",
+        generateBtn: "Passwort generieren",
+        error: "Fehler beim Generieren des Passworts: ",
+        copied: "Kopiert!"
+      },
+      fr: {
+        name: "Français",
+        flag: "🇫🇷",
+        title: "EasyKey Générateur de Mot de Passe",
+        subtitle: "Génération de mot de passe simple et sécurisée",
+        generateBtn: "Générer Mot de Passe",
+        error: "Erreur de génération du mot de passe: ",
+        copied: "Copié!"
+      },
+      it: {
+        name: "Italiano",
+        flag: "🇮🇹",
+        title: "EasyKey Generatore di Password",
+        subtitle: "Generazione di password semplice e sicura",
+        generateBtn: "Genera Password",
+        error: "Errore nella generazione della password: ",
+        copied: "Copiato!"
+      },
+      pt: {
+        name: "Português",
+        flag: "🇵🇹",
+        title: "EasyKey Gerador de Senhas",
+        subtitle: "Geração de senhas simples e segura",
+        generateBtn: "Gerar Senha",
+        error: "Erro ao gerar senha: ",
+        copied: "Copiado!"
+      },
+      ru: {
+        name: "Русский",
+        flag: "🇷🇺",
+        title: "EasyKey Генератор Паролей",
+        subtitle: "Простая и безопасная генерация паролей",
+        generateBtn: "Создать Пароль",
+        error: "Ошибка при создании пароля: ",
+        copied: "Скопировано!"
+      },
+      zh: {
+        name: "中文",
+        flag: "🇨🇳",
+        title: "EasyKey 密码生成器",
+        subtitle: "简单且安全的密码生成",
+        generateBtn: "生成密码",
+        error: "生成密码时出错: ",
+        copied: "已复制！"
+      },
+      ja: {
+        name: "日本語",
+        flag: "🇯🇵",
+        title: "EasyKey パスワード生成ツール",
+        subtitle: "シンプルで安全なパスワード生成",
+        generateBtn: "パスワードを生成",
+        error: "パスワード生成エラー: ",
+        copied: "コピーしました！"
+      }
+    };
+    
+    let currentLang = 'en';
+    
+    // Generate language menu options
+    function generateLanguageMenu() {
+      const menu = document.getElementById('language-menu');
+      menu.innerHTML = ''; // Clear existing options
+      
+      Object.entries(translations).forEach(([code, lang]) => {
+        const option = document.createElement('button');
+        option.className = 'language-option';
+        option.innerHTML = `<span class="language-flag">${lang.flag}</span> ${lang.name}`;
+        option.onclick = function() {
+          changeLanguage(code);
+          toggleLanguageMenu();
+        };
+        menu.appendChild(option);
+      });
+    }
+    
+    function changeLanguage(langCode) {
+      if (translations[langCode]) {
+        currentLang = langCode;
+        updateTexts();
+        updateLanguageButton();
+      }
+    }
+    
+    function updateLanguageButton() {
+      document.getElementById('current-flag').textContent = translations[currentLang].flag;
+      document.getElementById('current-language').textContent = translations[currentLang].name;
+    }
+    
+    function toggleLanguageMenu() {
+      const menu = document.getElementById('language-menu');
+      menu.classList.toggle('show');
+    }
+    
+    function updateTexts() {
+      const texts = translations[currentLang];
+      document.getElementById('title').textContent = texts.title;
+      document.getElementById('subtitle').textContent = texts.subtitle;
+      document.getElementById('generate-btn').textContent = texts.generateBtn;
+    }
+    
     // Use exactly the same password generation function as the React version
     function generateRandomPassword(length = 12) {
       // Using the exact same character set as in the React component
@@ -68,10 +275,37 @@
       return password;
     }
 
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('language-menu');
+      const button = document.getElementById('language-btn');
+      if (menu.classList.contains('show') && !button.contains(event.target) && !menu.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
+
     // Immediately execute to show it's working
     (function() {
       console.log('Script is running');
       document.body.style.opacity = 0.5;
+      
+      // Generate language menu options
+      generateLanguageMenu();
+      
+      // Check if browser language is supported and set it automatically
+      const browserLang = navigator.language.split('-')[0];
+      if (translations[browserLang]) {
+        currentLang = browserLang;
+      }
+      
+      updateTexts();
+      updateLanguageButton();
+      
+      // Setup language button
+      document.getElementById('language-btn').addEventListener('click', function(event) {
+        event.stopPropagation();
+        toggleLanguageMenu();
+      });
       
       setTimeout(function() {
         document.body.style.opacity = 1;
@@ -88,9 +322,20 @@
             output.style.display = 'block';
             output.textContent = password;
             console.log('Password generated:', password);
+            
+            // Make output clickable for copy
+            output.onclick = function() {
+              navigator.clipboard.writeText(password).then(() => {
+                const originalText = output.textContent;
+                output.textContent = translations[currentLang].copied;
+                setTimeout(() => {
+                  output.textContent = originalText;
+                }, 1000);
+              });
+            };
           } catch (err) {
             console.error('Error generating password:', err);
-            alert('Error generating password: ' + err.message);
+            alert(translations[currentLang].error + err.message);
           }
         };
       } else {

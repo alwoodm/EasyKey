@@ -14,7 +14,9 @@
     "make:desktop": "yarn workspace easykey-desktop electron:make",
     "fix:electron": "chmod +x ./rebuild-electron.sh && ./rebuild-electron.sh",
     "prepare:desktop": "node packages/desktop/copy-electron.js",
-    "clean-rebuild": "chmod +x ./fix-build.sh && ./fix-build.sh"
+    "clean-rebuild": "chmod +x ./fix-build.sh && ./fix-build.sh",
+    "install-ui": "chmod +x ./install-ui-deps.sh && ./install-ui-deps.sh",
+    "start-ui": "cd packages/desktop && yarn electron:start"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
