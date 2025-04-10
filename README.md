@@ -41,3 +41,40 @@ yarn start
 cd packages/desktop
 yarn electron:start
 ```
+
+### Building the Desktop Application
+```bash
+cd packages/desktop
+yarn electron:build
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### Issue: Expo CLI not found
+**Solution**: Ensure that Expo CLI is installed globally by running:
+```bash
+npm install -g expo-cli
+```
+
+#### Issue: Electron not starting
+**Solution**: Ensure that all dependencies are installed correctly by running:
+```bash
+yarn install
+```
+If the issue persists, try deleting the `node_modules` folder and reinstalling dependencies:
+```bash
+rm -rf node_modules
+yarn install
+```
+
+#### Issue: Electron build failing
+**Solution**: Ensure that you have the necessary build tools installed. On Windows, you may need to install additional dependencies:
+```bash
+npm install --global --production windows-build-tools
+```
+On macOS, ensure that Xcode Command Line Tools are installed:
+```bash
+xcode-select --install
+```

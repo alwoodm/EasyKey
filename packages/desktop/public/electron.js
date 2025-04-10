@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
-// Remove dependency on electron-is-dev package
+// Detect environment properly
 const isDev = process.env.NODE_ENV !== 'production';
 
 function createWindow() {
@@ -18,10 +18,15 @@ function createWindow() {
   mainWindow.loadURL(
     isDev
       ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
+      : `file://${path.join(__dirname, './index.html')}`
   );
 
-  // Open developer tools in dev mode
+  // Hide menu bar in production
+  if (!isDev) {
+    Menu.setApplicationMenu(null);
+  }
+
+  // Open developer tools only in dev mode
   if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   }
