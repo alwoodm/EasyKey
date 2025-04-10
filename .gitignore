@@ -45,6 +45,9 @@ web-build/
 # Electron
 .electron-builder/
 
+# Shell scripts
+*.sh
+
 # Misc
 .env
 .env.production
