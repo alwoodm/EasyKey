@@ -1,0 +1,15 @@
+{
+  "name": "easykey",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start:mobile": "yarn workspace @easykey/mobile start",
+    "start:desktop": "yarn workspace @easykey/desktop electron:start"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
