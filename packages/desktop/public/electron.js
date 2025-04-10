@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const isDev = require('electron-is-dev');
+// Remove dependency on electron-is-dev package
+const isDev = process.env.NODE_ENV !== 'production';
 
 function createWindow() {
   // Create browser window
@@ -8,7 +9,8 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false
     }
   });
 

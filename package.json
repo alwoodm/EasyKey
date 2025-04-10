@@ -2,14 +2,21 @@
   "name": "easykey",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "start:mobile": "yarn workspace @easykey/mobile start",
-    "start:desktop": "yarn workspace @easykey/desktop electron:start"
+    "start:desktop": "yarn workspace @easykey/desktop electron:start",
+    "build:desktop": "yarn workspace @easykey/desktop electron:build",
+    "package:desktop": "yarn workspace @easykey/desktop electron:package",
+    "make:desktop": "yarn workspace @easykey/desktop electron:make",
+    "fix:electron": "chmod +x ./rebuild-electron.sh && ./rebuild-electron.sh",
+    "prepare:desktop": "node packages/desktop/copy-electron.js"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3"
   }
 }
