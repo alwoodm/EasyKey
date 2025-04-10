@@ -1,5 +1,5 @@
 {
-  "name": "@easykey/desktop",
+  "name": "easykey-desktop",
   "version": "1.0.0",
   "description": "Secure password generator for desktop platforms",
   "author": {
@@ -7,15 +7,15 @@
     "email": "contact@easykey.example.com"
   },
   "license": "MIT",
-  "main": "public/electron.js",
+  "main": "build/electron.js",
   "homepage": "./",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && node copy-build-files.js",
     "electron:start": "cross-env NODE_ENV=development concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron:build": "cross-env NODE_ENV=production yarn build && cross-env NODE_ENV=production electron-builder",
     "electron:package": "cross-env NODE_ENV=production electron-builder --dir",
-    "electron:make": "cross-env NODE_ENV=production electron-builder --mac --win --linux",
+    "electron:make": "cross-env NODE_ENV=production electron-builder --linux",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
@@ -45,20 +45,17 @@
     ]
   },
   "build": {
-    "appId": "com.easykey.app",
     "productName": "EasyKey",
+    "appId": "com.easykey.app",
     "files": [
-      "build/**/*",
-      "node_modules/**/*",
-      "public/electron.js"
+      "build/**/*"
     ],
     "directories": {
       "buildResources": "assets",
       "output": "dist"
     },
     "extraMetadata": {
-      "main": "build/electron.js",
-      "NODE_ENV": "production"
+      "main": "build/electron.js"
     },
     "mac": {
       "category": "public.app-category.utilities",
@@ -74,7 +71,7 @@
       ],
       "category": "Utility",
       "packageCategory": "utils",
-      "executableName": "easykey",
+      "executableName": "EasyKey",
       "artifactName": "${productName}-${version}.${ext}",
       "synopsis": "Secure password generator",
       "desktop": {

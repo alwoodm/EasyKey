@@ -12,3 +12,53 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.btn-primary {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.btn-secondary {
+  background-color: #2196F3;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
+
+.password-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+}
+
+.password-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.range-container {
+  margin: 20px 0;
+}
+
+.range-label {
+  display: block;
+  margin-bottom: 10px;
+}

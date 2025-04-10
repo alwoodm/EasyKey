@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>EasyKey</title>
+  <style>
+    body {
+      background-color: #282c34;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      text-align: center;
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 { 
+      color: #4CAF50;
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 30px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 15px 32px;
+      font-size: 16px;
+      margin: 10px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #password-output {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: rgba(255,255,255,0.1);
+      min-height: 20px;
+      min-width: 300px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>EasyKey Password Generator</h1>
+  <p>Simple and secure password generation</p>
+  <button id="generate-btn">Generate Password</button>
+  <div id="password-output"></div>
+
+  <script>
+    // Immediately execute to show it's working
+    (function() {
+      console.log('Script is running');
+      document.body.style.opacity = 0.5; // Start with half opacity to ensure CSS is working
+      
+      setTimeout(function() {
+        console.log('Setting full opacity');
+        document.body.style.opacity = 1; // Fade in to full opacity
+      }, 500);
+      
+      // Setup button functionality
+      var btn = document.getElementById('generate-btn');
+      var output = document.getElementById('password-output');
+      
+      if (btn && output) {
+        btn.onclick = function() {
+          try {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+            let password = "";
+            for (let i = 0; i < 12; i++) {
+              password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            output.style.display = 'block';
+            output.textContent = password;
+            console.log('Password generated:', password);
+          } catch (err) {
+            console.error('Error generating password:', err);
+            alert('Error generating password: ' + err.message);
+          }
+        };
+      } else {
+        console.error('Button or output element not found');
+      }
+    })();
+  </script>
+</body>
+</html>

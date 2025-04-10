@@ -1,5 +1,5 @@
 {
-  "name": "easykey",
+  "name": "easykey-workspace",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
@@ -8,12 +8,13 @@
   ],
   "scripts": {
     "start:mobile": "yarn workspace @easykey/mobile start",
-    "start:desktop": "yarn workspace @easykey/desktop electron:start",
-    "build:desktop": "yarn workspace @easykey/desktop electron:build",
-    "package:desktop": "yarn workspace @easykey/desktop electron:package",
-    "make:desktop": "yarn workspace @easykey/desktop electron:make",
+    "start:desktop": "yarn workspace easykey-desktop electron:start",
+    "build:desktop": "yarn workspace easykey-desktop electron:build",
+    "package:desktop": "yarn workspace easykey-desktop electron:package",
+    "make:desktop": "yarn workspace easykey-desktop electron:make",
     "fix:electron": "chmod +x ./rebuild-electron.sh && ./rebuild-electron.sh",
-    "prepare:desktop": "node packages/desktop/copy-electron.js"
+    "prepare:desktop": "node packages/desktop/copy-electron.js",
+    "clean-rebuild": "chmod +x ./fix-build.sh && ./fix-build.sh"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
