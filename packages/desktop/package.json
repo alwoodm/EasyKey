@@ -13,9 +13,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "electron:start": "cross-env NODE_ENV=development concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron:build": "cross-env NODE_ENV=production yarn build && electron-builder",
-    "electron:package": "electron-builder --dir",
-    "electron:make": "electron-builder --mac --win --linux",
+    "electron:build": "cross-env NODE_ENV=production yarn build && cross-env NODE_ENV=production electron-builder",
+    "electron:package": "cross-env NODE_ENV=production electron-builder --dir",
+    "electron:make": "cross-env NODE_ENV=production electron-builder --mac --win --linux",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
@@ -57,7 +57,8 @@
       "output": "dist"
     },
     "extraMetadata": {
-      "main": "build/electron.js"
+      "main": "build/electron.js",
+      "NODE_ENV": "production"
     },
     "mac": {
       "category": "public.app-category.utilities",

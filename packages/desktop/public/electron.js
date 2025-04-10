@@ -1,7 +1,9 @@
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
-// Detect environment properly
-const isDev = process.env.NODE_ENV !== 'production';
+const fs = require('fs');
+
+// More reliable environment detection
+const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
 
 function createWindow() {
   // Create browser window
@@ -15,13 +17,17 @@ function createWindow() {
   });
 
   // Load React app
-  mainWindow.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, './index.html')}`
-  );
+  const appPath = app.isPackaged 
+    ? path.join(__dirname, './index.html')
+    : 'http://localhost:3000';
+  
+  console.log(`Loading app from: ${appPath}`);
+  console.log(`isDev: ${isDev}, isPackaged: ${app.isPackaged}`);
+  
+  mainWindow.loadURL(appPath);
 
-  // Hide menu bar in production
+  // Forcefully hide menu bar in production
+  mainWindow.setMenuBarVisibility(isDev);
   if (!isDev) {
     Menu.setApplicationMenu(null);
   }
