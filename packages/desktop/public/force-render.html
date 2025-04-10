@@ -57,14 +57,24 @@
   <div id="password-output"></div>
 
   <script>
+    // Use exactly the same password generation function as the React version
+    function generateRandomPassword(length = 12) {
+      // Using the exact same character set as in the React component
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return password;
+    }
+
     // Immediately execute to show it's working
     (function() {
       console.log('Script is running');
-      document.body.style.opacity = 0.5; // Start with half opacity to ensure CSS is working
+      document.body.style.opacity = 0.5;
       
       setTimeout(function() {
-        console.log('Setting full opacity');
-        document.body.style.opacity = 1; // Fade in to full opacity
+        document.body.style.opacity = 1;
       }, 500);
       
       // Setup button functionality
@@ -74,11 +84,7 @@
       if (btn && output) {
         btn.onclick = function() {
           try {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-            let password = "";
-            for (let i = 0; i < 12; i++) {
-              password += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
+            const password = generateRandomPassword(12);
             output.style.display = 'block';
             output.textContent = password;
             console.log('Password generated:', password);
