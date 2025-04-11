@@ -296,10 +296,10 @@ function App() {
         </div>
       </div>
       
-      {/* Improved layout for main content and sidebar */}
-      <div className="flex-grow flex flex-col md:flex-row relative">
-        {/* Sidebar - Only visible on desktop */}
-        <aside className="hidden md:block w-40 min-w-[10rem] mt-4 ml-4 mb-4 shrink-0">
+      {/* Layout with sidebar on left and centered main content */}
+      <div className="flex-grow relative">
+        {/* Sidebar - Only visible on desktop, positioned at left edge */}
+        <aside className="hidden md:block absolute left-4 top-4 w-48">
           <div className="sticky top-4 flex flex-col py-3 px-3 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
             <div className="text-xs uppercase text-gray-500 dark:text-gray-400 mb-3 font-medium">{t.selectMode}</div>
             {modes.map(modeOption => (
@@ -330,187 +330,187 @@ function App() {
           </div>
         </aside>
         
-        {/* Main content - Fixed centering */}
-        <main className="flex-grow flex justify-center px-4 py-4">
-          <div className="w-full max-w-2xl mx-auto">
+        {/* Main content - centered on entire page width */}
+        <main className="flex justify-center px-4 py-4">
+          <div className="w-full max-w-2xl">
             {/* Password display and options */}
             {mode === 'simple' ? (
-              <div className="flex-grow flex flex-col space-y-4">
-                {/* Password display area - Better responsive sizing */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                  <div className="p-3 sm:p-4 border-b border-gray-100 dark:border-gray-700">
-                    <h2 className="text-base font-medium text-gray-700 dark:text-gray-200">
-                      {t.generatedPassword}
-                    </h2>
-                    <div className="mt-2 flex items-center min-h-[50px] bg-gray-50 dark:bg-gray-750 rounded-md p-2.5 border border-gray-200 dark:border-gray-600">
-                      {password && password !== t.emptyCharsetError ? (
-                        <div className="font-mono text-base sm:text-lg w-full break-all">
-                          {password}
-                        </div>
-                      ) : (
-                        <div className="text-gray-400 dark:text-gray-500 text-sm italic">
-                          {password || t.noPasswordYet}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Password strength indicator */}
-                  {password && password !== t.emptyCharsetError && (
-                    <div className="px-3 sm:px-4 py-2 bg-gray-50 dark:bg-gray-750 border-b border-gray-100 dark:border-gray-700">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full ${getStrengthColor(passwordStrength)} transition-all`}
-                            style={{ width: `${(passwordStrength + 1) * 20}%` }}
-                          ></div>
-                        </div>
-                        <div className="text-xs font-medium">
-                          {getStrengthText(passwordStrength)}
-                        </div>
+                <div className="flex-grow flex flex-col space-y-4">
+                  {/* Password display area - Better responsive sizing */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                    <div className="p-3 sm:p-4 border-b border-gray-100 dark:border-gray-700">
+                      <h2 className="text-base font-medium text-gray-700 dark:text-gray-200">
+                        {t.generatedPassword}
+                      </h2>
+                      <div className="mt-2 flex items-center min-h-[50px] bg-gray-50 dark:bg-gray-750 rounded-md p-2.5 border border-gray-200 dark:border-gray-600">
+                        {password && password !== t.emptyCharsetError ? (
+                          <div className="font-mono text-base sm:text-lg w-full break-all">
+                            {password}
+                          </div>
+                        ) : (
+                          <div className="text-gray-400 dark:text-gray-500 text-sm italic">
+                            {password || t.noPasswordYet}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
-                  
-                  {/* Action buttons - Improved for touch */}
-                  <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-750 flex flex-col sm:flex-row gap-2">
-                    <button
-                      onClick={generatePassword}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2.5 px-3 rounded-md transition-all duration-200"
-                    >
-                      {t.generateButton}
-                    </button>
-                    <button
-                      onClick={copyToClipboard}
-                      disabled={!password || password === t.emptyCharsetError}
-                      className={`flex items-center justify-center py-2.5 px-4 rounded-md text-sm transition-all ${
-                        password && password !== t.emptyCharsetError
-                          ? copied
-                            ? 'bg-emerald-500 text-white'
-                            : 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600'
-                          : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-70'
-                        }`}
-                    >
-                      {copied ? (
-                        <>
-                          <span className="mr-1">{Icons.check}</span>
-                          {t.copiedToClipboard}
-                        </>
-                      ) : (
-                        <>
-                          <span className="mr-1">{Icons.copy}</span>
-                          {t.copyButton}
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-                
-                {/* Password options - Better mobile experience */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
-                  {/* Length slider */}
-                  <div className="mb-5">
-                    <div className="flex justify-between mb-2">
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {t.passwordLength}
-                      </label>
-                      <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm bg-blue-50 dark:bg-blue-900/30 px-1.5 rounded">
-                        {passwordLength}
-                      </span>
-                    </div>
-                    <input 
-                      type="range" 
-                      min="6" 
-                      max="32" 
-                      value={passwordLength} 
-                      onChange={(e) => setPasswordLength(parseInt(e.target.value))}
-                      className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      <span>6</span>
-                      <span>12</span>
-                      <span>18</span>
-                      <span>24</span>
-                      <span>32</span>
+                    
+                    {/* Password strength indicator */}
+                    {password && password !== t.emptyCharsetError && (
+                      <div className="px-3 sm:px-4 py-2 bg-gray-50 dark:bg-gray-750 border-b border-gray-100 dark:border-gray-700">
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full ${getStrengthColor(passwordStrength)} transition-all`}
+                              style={{ width: `${(passwordStrength + 1) * 20}%` }}
+                            ></div>
+                          </div>
+                          <div className="text-xs font-medium">
+                            {getStrengthText(passwordStrength)}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Action buttons - Improved for touch */}
+                    <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-750 flex flex-col sm:flex-row gap-2">
+                      <button
+                        onClick={generatePassword}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2.5 px-3 rounded-md transition-all duration-200"
+                      >
+                        {t.generateButton}
+                      </button>
+                      <button
+                        onClick={copyToClipboard}
+                        disabled={!password || password === t.emptyCharsetError}
+                        className={`flex items-center justify-center py-2.5 px-4 rounded-md text-sm transition-all ${
+                          password && password !== t.emptyCharsetError
+                            ? copied
+                              ? 'bg-emerald-500 text-white'
+                              : 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600'
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-70'
+                          }`}
+                      >
+                        {copied ? (
+                          <>
+                            <span className="mr-1">{Icons.check}</span>
+                            {t.copiedToClipboard}
+                          </>
+                        ) : (
+                          <>
+                            <span className="mr-1">{Icons.copy}</span>
+                            {t.copyButton}
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                   
-                  {/* Character options - Better responsive grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
+                  {/* Password options - Better mobile experience */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+                    {/* Length slider */}
+                    <div className="mb-5">
+                      <div className="flex justify-between mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t.passwordLength}
+                        </label>
+                        <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm bg-blue-50 dark:bg-blue-900/30 px-1.5 rounded">
+                          {passwordLength}
+                        </span>
+                      </div>
                       <input 
-                        type="checkbox" 
-                        id="uppercase" 
-                        checked={includeUppercase} 
-                        onChange={() => setIncludeUppercase(!includeUppercase)}
-                        className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
+                        type="range" 
+                        min="6" 
+                        max="32" 
+                        value={passwordLength} 
+                        onChange={(e) => setPasswordLength(parseInt(e.target.value))}
+                        className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
                       />
-                      <label htmlFor="uppercase" className="ml-2 block text-sm cursor-pointer flex-grow">
-                        {t.includeUppercase}
-                      </label>
+                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <span>6</span>
+                        <span>12</span>
+                        <span>18</span>
+                        <span>24</span>
+                        <span>32</span>
+                      </div>
                     </div>
                     
-                    <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
-                      <input 
-                        type="checkbox" 
-                        id="lowercase" 
-                        checked={includeLowercase} 
-                        onChange={() => setIncludeLowercase(!includeLowercase)}
-                        className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
-                      />
-                      <label htmlFor="lowercase" className="ml-2 block text-sm cursor-pointer flex-grow">
-                        {t.includeLowercase}
-                      </label>
-                    </div>
-                    
-                    <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
-                      <input 
-                        type="checkbox" 
-                        id="numbers" 
-                        checked={includeNumbers} 
-                        onChange={() => setIncludeNumbers(!includeNumbers)}
-                        className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
-                      />
-                      <label htmlFor="numbers" className="ml-2 block text-sm cursor-pointer flex-grow">
-                        {t.includeNumbers}
-                      </label>
-                    </div>
-                    
-                    <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
-                      <input 
-                        type="checkbox" 
-                        id="symbols" 
-                        checked={includeSymbols} 
-                        onChange={() => setIncludeSymbols(!includeSymbols)}
-                        className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
-                      />
-                      <label htmlFor="symbols" className="ml-2 block text-sm cursor-pointer flex-grow">
-                        {t.includeSymbols}
-                      </label>
+                    {/* Character options - Better responsive grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
+                        <input 
+                          type="checkbox" 
+                          id="uppercase" 
+                          checked={includeUppercase} 
+                          onChange={() => setIncludeUppercase(!includeUppercase)}
+                          className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
+                        />
+                        <label htmlFor="uppercase" className="ml-2 block text-sm cursor-pointer flex-grow">
+                          {t.includeUppercase}
+                        </label>
+                      </div>
+                      
+                      <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
+                        <input 
+                          type="checkbox" 
+                          id="lowercase" 
+                          checked={includeLowercase} 
+                          onChange={() => setIncludeLowercase(!includeLowercase)}
+                          className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
+                        />
+                        <label htmlFor="lowercase" className="ml-2 block text-sm cursor-pointer flex-grow">
+                          {t.includeLowercase}
+                        </label>
+                      </div>
+                      
+                      <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
+                        <input 
+                          type="checkbox" 
+                          id="numbers" 
+                          checked={includeNumbers} 
+                          onChange={() => setIncludeNumbers(!includeNumbers)}
+                          className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
+                        />
+                        <label htmlFor="numbers" className="ml-2 block text-sm cursor-pointer flex-grow">
+                          {t.includeNumbers}
+                        </label>
+                      </div>
+                      
+                      <div className="p-2.5 rounded-md bg-gray-50 dark:bg-gray-750 flex items-center border border-gray-200 dark:border-gray-600">
+                        <input 
+                          type="checkbox" 
+                          id="symbols" 
+                          checked={includeSymbols} 
+                          onChange={() => setIncludeSymbols(!includeSymbols)}
+                          className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 cursor-pointer"
+                        />
+                        <label htmlFor="symbols" className="ml-2 block text-sm cursor-pointer flex-grow">
+                          {t.includeSymbols}
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex-grow flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-md p-5 border border-gray-200 dark:border-gray-700">
-                <div className="text-center max-w-lg">
-                  <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
-                    {t.creativeMode}
-                  </h2>
-                  <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md p-4 my-4">
-                    <p className="text-amber-700 dark:text-amber-400 text-sm">
-                      {t.underConstruction}
+              ) : (
+                <div className="flex-grow flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-md p-5 border border-gray-200 dark:border-gray-700">
+                  <div className="text-center max-w-lg">
+                    <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
+                      {t.creativeMode}
+                    </h2>
+                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md p-4 my-4">
+                      <p className="text-amber-700 dark:text-amber-400 text-sm">
+                        {t.underConstruction}
+                      </p>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-3">
+                      {t.comingSoon}
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-500 mt-4 text-xs italic">
+                      {t.creativeDescription}
                     </p>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-3">
-                    {t.comingSoon}
-                  </p>
-                  <p className="text-gray-500 dark:text-gray-500 mt-4 text-xs italic">
-                    {t.creativeDescription}
-                  </p>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </main>
       </div>
