@@ -11,11 +11,7 @@ EasyKey is a modern, responsive password generator application built with React.
   - Password strength indicator
 
 - **Multilingual Support**:
-  - English language interface
-  - Polish language interface
-  - German language interface
-  - French language interface
-  - Spanish language interface
+  - Language interface in English, Polish, German, French, Spanish
   - Automatically detects browser language
   - Easily expandable to other languages
 
