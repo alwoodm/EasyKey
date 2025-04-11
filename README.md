@@ -1,88 +1,70 @@
-# EasyKey - Cross-platform Password Generator
+# Getting Started with Create React App
 
-EasyKey is an application for generating secure, random passwords, available on mobile platforms (iOS, Android) and desktop platforms (Windows, macOS, Linux).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Technologies
+## Available Scripts
 
-- **Mobile (iOS, Android)**: React Native with Expo
-- **Desktop (Windows, macOS, Linux)**: React with Electron
-- **Shared code**: Library of common components and logic
+In the project directory, you can run:
 
-## Features
+### `npm start`
 
-- Generate secure random passwords
-- Customize password length and character sets
-- Light and dark theme support
-- Copy passwords to clipboard with one click
-- Multi-language support (English, Polish)
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## Project Structure
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-```
-EasyKey/
-├── packages/
-│   ├── mobile/       # React Native (Expo) application
-│   ├── desktop/      # Electron application with React
-│   └── shared/       # Shared code
-```
+### `npm test`
 
-## Installation and Running
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### Prerequisites
-- Node.js (version 16 or higher)
-- Yarn
-- Expo CLI (for mobile version)
+### `npm run build`
 
-### Installing Dependencies
-```bash
-yarn install
-```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Running the Mobile Application
-```bash
-cd packages/mobile
-yarn start
-```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### Running the Desktop Application
-```bash
-cd packages/desktop
-yarn electron:start
-```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Building the Desktop Application
-```bash
-cd packages/desktop
-yarn electron:build
-```
+### `npm run eject`
 
-## Troubleshooting
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-### Common Issues
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-#### Issue: Expo CLI not found
-**Solution**: Ensure that Expo CLI is installed globally by running:
-```bash
-npm install -g expo-cli
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-#### Issue: Electron not starting
-**Solution**: Ensure that all dependencies are installed correctly by running:
-```bash
-yarn install
-```
-If the issue persists, try deleting the `node_modules` folder and reinstalling dependencies:
-```bash
-rm -rf node_modules
-yarn install
-```
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-#### Issue: Electron build failing
-**Solution**: Ensure that you have the necessary build tools installed. On Windows, you may need to install additional dependencies:
-```bash
-npm install --global --production windows-build-tools
-```
-On macOS, ensure that Xcode Command Line Tools are installed:
-```bash
-xcode-select --install
-```
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
