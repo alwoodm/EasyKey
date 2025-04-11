@@ -80,6 +80,129 @@ const translations = {
     underConstruction: "Ta Sekcja Jest W Budowie",
     comingSoon: "Wkrótce Dostępne!",
     creativeDescription: "Generator haseł wspomagany przez AI, tworzący łatwe do zapamiętania hasła bazujące na kontekście"
+  },
+  de: {
+    appTitle: "EasyKey",
+    tagline: "Passwort-Generator",
+    simpleMode: "Einfacher Modus",
+    creativeMode: "Kreativer Modus",
+    mode: "Modus",
+    selectMode: "Modus wählen",
+    description: "Generieren Sie einfach sichere und merkbare Passwörter",
+    generateButton: "Passwort generieren",
+    copyButton: "Kopieren",
+    copiedToClipboard: "Kopiert!",
+    passwordLength: "Passwortlänge",
+    includeUppercase: "Großbuchstaben (A-Z)",
+    includeLowercase: "Kleinbuchstaben (a-z)",
+    includeNumbers: "Zahlen (0-9)",
+    includeSymbols: "Sonderzeichen (!@#$)",
+    generatedPassword: "Ihr Passwort",
+    passwordStrength: {
+      veryWeak: "Sehr schwach",
+      weak: "Schwach",
+      medium: "Mittel",
+      strong: "Stark",
+      veryStrong: "Sehr stark"
+    },
+    settings: "Einstellungen",
+    theme: {
+      auto: "Auto-Thema",
+      light: "Heller Modus",
+      dark: "Dunkler Modus"
+    },
+    language: "Sprache",
+    noPasswordYet: "Generieren Sie ein Passwort, um es hier zu sehen",
+    emptyCharsetError: "Bitte wählen Sie mindestens einen Zeichentyp aus",
+    modeTooltips: {
+      simple: "Einfaches Passwort mit anpassbaren Optionen",
+      creative: "Erweiterte Einstellungen mit zusätzlichen Funktionen"
+    },
+    underConstruction: "Dieser Bereich ist im Aufbau",
+    comingSoon: "Demnächst verfügbar!",
+    creativeDescription: "KI-gestützter Passwortgenerator, der merkbare Passwörter basierend auf dem Kontext erstellt"
+  },
+  fr: {
+    appTitle: "EasyKey",
+    tagline: "Générateur de mot de passe",
+    simpleMode: "Mode simple",
+    creativeMode: "Mode créatif",
+    mode: "Mode",
+    selectMode: "Sélectionner le mode",
+    description: "Générez facilement des mots de passe sécurisés et mémorisables",
+    generateButton: "Générer un mot de passe",
+    copyButton: "Copier",
+    copiedToClipboard: "Copié !",
+    passwordLength: "Longueur du mot de passe",
+    includeUppercase: "Majuscules (A-Z)",
+    includeLowercase: "Minuscules (a-z)",
+    includeNumbers: "Chiffres (0-9)",
+    includeSymbols: "Caractères spéciaux (!@#$)",
+    generatedPassword: "Votre mot de passe",
+    passwordStrength: {
+      veryWeak: "Très faible",
+      weak: "Faible",
+      medium: "Moyen",
+      strong: "Fort",
+      veryStrong: "Très fort"
+    },
+    settings: "Paramètres",
+    theme: {
+      auto: "Thème auto",
+      light: "Mode clair",
+      dark: "Mode sombre"
+    },
+    language: "Langue",
+    noPasswordYet: "Générez un mot de passe pour le voir ici",
+    emptyCharsetError: "Veuillez sélectionner au moins un type de caractère",
+    modeTooltips: {
+      simple: "Mot de passe simple avec options personnalisables",
+      creative: "Paramètres avancés avec des fonctionnalités supplémentaires"
+    },
+    underConstruction: "Cette section est en construction",
+    comingSoon: "Bientôt disponible !",
+    creativeDescription: "Générateur de mot de passe alimenté par l'IA qui crée des mots de passe mémorables basés sur le contexte"
+  },
+  es: {
+    appTitle: "EasyKey",
+    tagline: "Generador de contraseñas",
+    simpleMode: "Modo simple",
+    creativeMode: "Modo creativo",
+    mode: "Modo",
+    selectMode: "Seleccionar modo",
+    description: "Genera contraseñas seguras y memorables fácilmente",
+    generateButton: "Generar contraseña",
+    copyButton: "Copiar",
+    copiedToClipboard: "¡Copiado!",
+    passwordLength: "Longitud de contraseña",
+    includeUppercase: "Mayúsculas (A-Z)",
+    includeLowercase: "Minúsculas (a-z)",
+    includeNumbers: "Números (0-9)",
+    includeSymbols: "Caracteres especiales (!@#$)",
+    generatedPassword: "Tu contraseña",
+    passwordStrength: {
+      veryWeak: "Muy débil",
+      weak: "Débil",
+      medium: "Media",
+      strong: "Fuerte",
+      veryStrong: "Muy fuerte"
+    },
+    settings: "Configuración",
+    theme: {
+      auto: "Tema automático",
+      light: "Modo claro",
+      dark: "Modo oscuro"
+    },
+    language: "Idioma",
+    noPasswordYet: "Genera una contraseña para verla aquí",
+    emptyCharsetError: "Por favor, selecciona al menos un tipo de caracter",
+    modeTooltips: {
+      simple: "Contraseña básica con opciones personalizables",
+      creative: "Configuración avanzada con funciones adicionales"
+    },
+    underConstruction: "Esta sección está en construcción",
+    comingSoon: "¡Próximamente!",
+    creativeDescription: "Generador de contraseñas potenciado por IA que crea contraseñas memorables basadas en el contexto"
   }
 };
 

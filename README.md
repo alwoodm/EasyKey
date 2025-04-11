@@ -13,18 +13,24 @@ EasyKey is a modern, responsive password generator application built with React.
 - **Multilingual Support**:
   - English language interface
   - Polish language interface
+  - German language interface
+  - French language interface
+  - Spanish language interface
   - Automatically detects browser language
   - Easily expandable to other languages
 
 - **Responsive Design**:
   - Works on mobile devices, tablets, and desktops
   - Adaptive layout for different screen sizes
-  - No scrolling needed - all content fits on one screen
+  - Smooth mode switching with tabs on mobile devices
+  - Centered content for better readability
+  - Fully optimized touch interface
 
 - **Theme Support**:
   - Automatic theme based on system preferences
-  - Manual toggle between light and dark modes
+  - Manual toggle between light and dark modes via a floating button
   - Theme preference is saved between sessions
+  - Smooth transition animations
 
 ## Technical Details
 
@@ -32,6 +38,8 @@ This project was built with:
 - React
 - Tailwind CSS for styling
 - Modern JavaScript features
+- SVG icons for optimal display quality
+- LocalStorage for saving user preferences
 
 ## Development Setup
 
@@ -77,12 +85,23 @@ Launches the test runner in interactive watch mode.
 
 Builds the app for production to the `build` folder.
 
+## Adding New Languages
+
+To add a new language to EasyKey:
+
+1. Add the new language object to `translations.js`
+2. Add flag SVG for the language in the `FlagSVGs` object in `App.js`
+3. Add the language name to the `getLanguageName` function in `App.js`
+4. Add the language selector button to the dropdown menu
+
 ## Future Plans
 
 - Password history and saved passwords
 - Export/import password functionality
 - Additional languages support
 - Additional customization options
+- Password sharing capabilities
+- Progressive Web App (PWA) implementation
 
 ## License
 
