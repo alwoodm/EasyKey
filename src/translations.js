@@ -4,16 +4,17 @@ const translations = {
     tagline: "Password Generator",
     simpleMode: "Simple Mode",
     creativeMode: "Creative Mode",
+    mode: "Mode",
+    selectMode: "Select Mode",
     description: "Generate secure and memorable passwords easily",
-    underConstruction: "This section is currently under construction",
     generateButton: "Generate Password",
     copyButton: "Copy",
-    copiedToClipboard: "Copied to clipboard!",
+    copiedToClipboard: "Copied!",
     passwordLength: "Password Length",
-    includeUppercase: "Uppercase Letters (A-Z)",
-    includeLowercase: "Lowercase Letters (a-z)",
+    includeUppercase: "Uppercase (A-Z)",
+    includeLowercase: "Lowercase (a-z)",
     includeNumbers: "Numbers (0-9)",
-    includeSymbols: "Special Characters (!@#$)",
+    includeSymbols: "Special Chars (!@#$)",
     generatedPassword: "Your Password",
     passwordStrength: {
       veryWeak: "Very Weak",
@@ -22,33 +23,39 @@ const translations = {
       strong: "Strong",
       veryStrong: "Very Strong"
     },
-    creativeDescription: "AI-powered password generator that creates memorable passwords based on context",
-    comingSoon: "Coming Soon!",
     settings: "Settings",
     theme: {
       auto: "Auto Theme",
-      light: "Light Theme",
-      dark: "Dark Theme"
+      light: "Light Mode",
+      dark: "Dark Mode"
     },
     language: "Language",
     noPasswordYet: "Generate a password to see it here",
-    emptyCharsetError: "Please select at least one character type"
+    emptyCharsetError: "Please select at least one character type",
+    modeTooltips: {
+      simple: "Basic password with customizable options",
+      creative: "Advanced settings with additional features"
+    },
+    underConstruction: "This Section is Under Construction",
+    comingSoon: "Coming Soon!",
+    creativeDescription: "AI-powered password generator that creates memorable passwords based on context"
   },
   pl: {
     appTitle: "EasyKey",
     tagline: "Generator Haseł",
     simpleMode: "Tryb Prosty",
     creativeMode: "Tryb Kreatywny",
+    mode: "Tryb",
+    selectMode: "Wybierz Tryb",
     description: "Generuj bezpieczne i łatwe do zapamiętania hasła",
-    underConstruction: "Ta sekcja jest obecnie w budowie",
     generateButton: "Wygeneruj Hasło",
     copyButton: "Kopiuj",
-    copiedToClipboard: "Skopiowano do schowka!",
+    copiedToClipboard: "Skopiowano!",
     passwordLength: "Długość Hasła",
-    includeUppercase: "Wielkie Litery (A-Z)",
-    includeLowercase: "Małe Litery (a-z)",
+    includeUppercase: "Wielkie (A-Z)",
+    includeLowercase: "Małe (a-z)",
     includeNumbers: "Cyfry (0-9)",
-    includeSymbols: "Znaki Specjalne (!@#$)",
+    includeSymbols: "Znaki spec. (!@#$)",
     generatedPassword: "Twoje Hasło",
     passwordStrength: {
       veryWeak: "Bardzo Słabe",
@@ -57,24 +64,33 @@ const translations = {
       strong: "Silne",
       veryStrong: "Bardzo Silne"
     },
-    creativeDescription: "Generator haseł wspomagany przez AI, tworzący łatwe do zapamiętania hasła bazujące na kontekście",
-    comingSoon: "Wkrótce Dostępne!",
     settings: "Ustawienia",
     theme: {
-      auto: "Motyw Automatyczny",
-      light: "Jasny Motyw",
-      dark: "Ciemny Motyw"
+      auto: "Motyw Auto",
+      light: "Jasny",
+      dark: "Ciemny"
     },
     language: "Język",
     noPasswordYet: "Wygeneruj hasło, aby zobaczyć je tutaj",
-    emptyCharsetError: "Wybierz przynajmniej jeden typ znaków"
+    emptyCharsetError: "Wybierz przynajmniej jeden typ znaków",
+    modeTooltips: {
+      simple: "Podstawowe hasło z opcjami dostosowania",
+      creative: "Zaawansowane ustawienia z dodatkowymi funkcjami"
+    },
+    underConstruction: "Ta Sekcja Jest W Budowie",
+    comingSoon: "Wkrótce Dostępne!",
+    creativeDescription: "Generator haseł wspomagany przez AI, tworzący łatwe do zapamiętania hasła bazujące na kontekście"
   }
 };
 
 // Helper function to get the active language code
 export const getActiveLanguage = () => {
   const savedLanguage = localStorage.getItem('easykey-language');
-  return savedLanguage || (navigator.language.substring(0, 2) === 'pl' ? 'pl' : 'en');
+  if (savedLanguage) return savedLanguage;
+  
+  // Get browser language and check if it's supported
+  const browserLang = navigator.language.substring(0, 2).toLowerCase();
+  return translations[browserLang] ? browserLang : 'en';
 };
 
 // Helper function to get translations

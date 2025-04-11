@@ -1,27 +1,30 @@
 # EasyKey - Password Generator
 
-EasyKey is a modern, responsive password generator application built with React. It helps users create secure and memorable passwords with two distinct modes.
+EasyKey is a modern, responsive password generator application built with React. It helps users create secure passwords with customizable options.
 
 ## Features
 
-- **Simple Mode**: Generate secure passwords with customizable options:
+- **Password Generator with Customizable Options**:
   - Adjustable password length
   - Include/exclude uppercase letters, lowercase letters, numbers, and symbols
   - One-click copy to clipboard functionality
-  
-- **Creative Mode** (Coming Soon):
-  - AI-powered password generation
-  - Creates memorable yet secure passwords based on context
-  - Example: "MamDuzoForsy2011$$$" where 2011 might be the year an account was created
+  - Password strength indicator
 
 - **Multilingual Support**:
   - English language interface
   - Polish language interface
+  - Automatically detects browser language
   - Easily expandable to other languages
 
 - **Responsive Design**:
   - Works on mobile devices, tablets, and desktops
   - Adaptive layout for different screen sizes
+  - No scrolling needed - all content fits on one screen
+
+- **Theme Support**:
+  - Automatic theme based on system preferences
+  - Manual toggle between light and dark modes
+  - Theme preference is saved between sessions
 
 ## Technical Details
 
@@ -76,12 +79,10 @@ Builds the app for production to the `build` folder.
 
 ## Future Plans
 
-- Implementation of the Creative Mode with AI-generated passwords
-- Additional languages support
-- Password strength indicator
 - Password history and saved passwords
-- Dark mode theme
 - Export/import password functionality
+- Additional languages support
+- Additional customization options
 
 ## License
 
