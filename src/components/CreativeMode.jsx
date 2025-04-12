@@ -39,6 +39,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
         numbers: includeNumbers,
         symbols: includeSymbols,
         context: context.trim(),
+        type: "poem" // Dodajemy typ "poem" aby generować wierszyki
       });
       
       setPassword(generatedPassword);
@@ -55,18 +56,19 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     setError('');
     
     try {
-      // Generowanie 10 losowych haseł
-      const passwords = await generateMultiplePasswords({
-        count: 10,
+      // Generowanie 10 wierszy w odpowiednim języku
+      const poems = await generateMultiplePasswords({
+        count: 5, // Zmniejszamy ilość do 5, bo wiersze będą dłuższe
         length: passwordLength,
         uppercase: true,
         lowercase: true,
         numbers: true,
         symbols: true,
-        language: getCurrentLanguage(), // Automatyczne wykrycie języka
+        language: getCurrentLanguage(),
+        type: "poem" // Dodajemy typ "poem" aby generować wierszyki
       });
       
-      setPasswordList(passwords.map(pwd => ({ text: pwd, copied: false })));
+      setPasswordList(poems.map(poem => ({ text: poem, copied: false })));
       setStep('list');
     } catch (err) {
       setError(`Error: ${err.message}`);
@@ -143,7 +145,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
           </div>
           
           <p className="text-gray-700 dark:text-gray-300 mb-6 max-w-lg mx-auto">
-            {t.creativeDescription}
+            Generator wierszy w różnych językach (wersja testowa)
           </p>
           
           <ul className="text-left text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto space-y-2">
@@ -151,19 +153,19 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              Silne i bezpieczne hasła
-            </li>
-            <li className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Łatwe do zapamiętania
+              Kreatywne wierszyki w Twoim języku
             </li>
             <li className="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               Wygenerowane przez AI
+            </li>
+            <li className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              Testowa wersja demo
             </li>
           </ul>
           
@@ -191,14 +193,14 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     );
   }
   
-  // Lista wygenerowanych haseł
+  // Lista wygenerowanych wierszy
   if (step === 'list') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
           <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
             <h2 className="text-lg font-medium text-gray-700 dark:text-gray-200">
-              Wygenerowane hasła
+              Wygenerowane wierszyki
             </h2>
             <button
               onClick={goBack}
@@ -212,7 +214,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
           
           <div className="p-4">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Wybierz jedno z 10 wygenerowanych haseł poniżej lub skopiuj je bezpośrednio do schowka:
+              Wybierz jeden z wygenerowanych wierszyków lub skopiuj go bezpośrednio:
             </p>
             
             <div className="space-y-2">
@@ -260,7 +262,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               onClick={generateMultiple}
               className="w-full mt-4 p-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-all"
             >
-              Wygeneruj nowe hasła
+              Wygeneruj nowe wierszyki
             </button>
           </div>
         </div>
