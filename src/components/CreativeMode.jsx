@@ -17,7 +17,8 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   // Nowe stany dla etapu wprowadzającego i listy haseł
   const [step, setStep] = useState('intro'); // 'intro', 'list', 'customize'
   const [passwordList, setPasswordList] = useState([]);
-  const [selectedPasswordIndex, setSelectedPasswordIndex] = useState(-1);
+  // eslint-disable-next-line no-unused-vars
+  const [selectedPasswordIndex, setSelectedPasswordIndex] = useState(-1); // Tracks which password was selected from the list
 
   const generatePassword = async () => {
     setIsLoading(true);
@@ -306,14 +307,41 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
           </div>
         </div>
         
-        {/* Przyciski akcji */}
+        {/* Przyciski akcji - poprawione, aby używać stanu copied */}
         <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-750 flex flex-col sm:flex-row gap-2">
           <button
-            onClick={copyToClipboard}
-            className="flex items-center justify-center py-2.5 px-4 rounded-md text-sm transition-all bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600"
+            onClick={generatePassword}
+            disabled={isLoading}
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2.5 px-3 rounded-md transition-all duration-200"
           >
-            <span className="mr-1">{Icons.copy}</span>
-            {t.copyButton}
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
+                Generating...
+              </span>
+            ) : (
+              t.generateButton
+            )}
+          </button>
+          <button
+            onClick={copyToClipboard}
+            className={`flex items-center justify-center py-2.5 px-4 rounded-md text-sm transition-all ${
+              copied
+                ? 'bg-emerald-500 text-white'
+                : 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600'
+            }`}
+          >
+            {copied ? (
+              <>
+                <span className="mr-1">{Icons.check}</span>
+                {t.copiedToClipboard}
+              </>
+            ) : (
+              <>
+                <span className="mr-1">{Icons.copy}</span>
+                {t.copyButton}
+              </>
+            )}
           </button>
         </div>
       </div>
