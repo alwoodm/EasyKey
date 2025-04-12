@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import { getActiveLanguage, getTranslations } from './translations'; // Removed unused import
+import { getActiveLanguage, getTranslations } from './translations';
 import { Icons } from './components/Icons';
 import { FlagEN, FlagPL, FlagDE, FlagFR, FlagES } from './components/Flags';
+import CreativeMode from './components/CreativeMode'; // Dodajemy import komponentu
 
 // Country flags as components
 const FlagSVGs = {
@@ -492,24 +493,13 @@ function App() {
                   </div>
                 </div>
               ) : (
-                <div className="flex-grow flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-md p-5 border border-gray-200 dark:border-gray-700">
-                  <div className="text-center max-w-lg">
-                    <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
-                      {t.creativeMode}
-                    </h2>
-                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md p-4 my-4">
-                      <p className="text-amber-700 dark:text-amber-400 text-sm">
-                        {t.underConstruction}
-                      </p>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-3">
-                      {t.comingSoon}
-                    </p>
-                    <p className="text-gray-500 dark:text-gray-500 mt-4 text-xs italic">
-                      {t.creativeDescription}
-                    </p>
-                  </div>
-                </div>
+                // Zastępujemy komunikat "W budowie" naszym komponentem
+                <CreativeMode 
+                  t={t}
+                  calculatePasswordStrength={calculatePasswordStrength}
+                  getStrengthText={getStrengthText}
+                  getStrengthColor={getStrengthColor}
+                />
               )}
           </div>
         </main>
