@@ -19,76 +19,97 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   const [memoryPreference, setMemoryPreference] = useState('medium');
   const [applicationType, setApplicationType] = useState('general');
   const [specialRequirements, setSpecialRequirements] = useState([]);
-  // Stan dla pytań otwartych
+  // Context fields for AI
   const [customContext, setCustomContext] = useState('');
   const [associations, setAssociations] = useState(['']);
   
-  // Memory preference options
-  const memoryOptions = [
-    { id: 'low', label: 'Łatwe do zapamiętania', description: 'Proste, ale mniej bezpieczne' },
-    { id: 'medium', label: 'Zbalansowane', description: 'Dobry kompromis między zapamiętywalnością a bezpieczeństwem' },
-    { id: 'high', label: 'Skomplikowane', description: 'Trudniejsze do zapamiętania, ale bardzo bezpieczne' }
+  // Memory preference options - translated and language-agnostic
+  const getMemoryOptions = () => [
+    { id: 'low', 
+      label: t.memoryOptions?.easy || 'Easy to remember', 
+      description: t.memoryOptions?.easyDesc || 'Simple, but less secure' 
+    },
+    { id: 'medium', 
+      label: t.memoryOptions?.balanced || 'Balanced', 
+      description: t.memoryOptions?.balancedDesc || 'Good compromise between memorability and security' 
+    },
+    { id: 'high', 
+      label: t.memoryOptions?.complex || 'Complex', 
+      description: t.memoryOptions?.complexDesc || 'Harder to remember, but very secure' 
+    }
   ];
   
-  // Application type options - poprawione, aby zapewnić lepszą widoczność tekstu
-  const applicationOptions = [
-    { id: 'banking', label: 'Bankowość', icon: '🏦', description: 'Konta bankowe, finanse, płatności' },
-    { id: 'email', label: 'Email', icon: '✉️', description: 'Konta pocztowe, komunikacja' },
-    { id: 'social', label: 'Media społecznościowe', icon: '👥', description: 'Facebook, Twitter, Instagram, itp.' },
-    { id: 'work', label: 'Praca', icon: '💼', description: 'Konta służbowe, VPN, systemy firmowe' },
-    { id: 'streaming', label: 'Streaming', icon: '📺', description: 'Netflix, Spotify, YouTube' },
-    { id: 'shopping', label: 'Zakupy', icon: '🛒', description: 'Amazon, Allegro, sklepy online' },
-    { id: 'gaming', label: 'Gry', icon: '🎮', description: 'Steam, Epic Games, konta do gier' },
-    { id: 'general', label: 'Ogólne', icon: '🔑', description: 'Do różnych zastosowań' }
+  // Application type options with universal icons
+  const getApplicationOptions = () => [
+    { id: 'banking', label: t.appTypes?.banking || 'Banking', icon: '🏦', 
+      description: t.appTypes?.bankingDesc || 'Bank accounts, finances, payments' },
+    { id: 'email', label: t.appTypes?.email || 'Email', icon: '✉️', 
+      description: t.appTypes?.emailDesc || 'Email accounts, communication' },
+    { id: 'social', label: t.appTypes?.social || 'Social Media', icon: '👥', 
+      description: t.appTypes?.socialDesc || 'Facebook, Twitter, Instagram, etc.' },
+    { id: 'work', label: t.appTypes?.work || 'Work', icon: '💼', 
+      description: t.appTypes?.workDesc || 'Work accounts, VPN, company systems' },
+    { id: 'streaming', label: t.appTypes?.streaming || 'Streaming', icon: '📺', 
+      description: t.appTypes?.streamingDesc || 'Netflix, Spotify, YouTube' },
+    { id: 'shopping', label: t.appTypes?.shopping || 'Shopping', icon: '🛒', 
+      description: t.appTypes?.shoppingDesc || 'Amazon, online stores' },
+    { id: 'gaming', label: t.appTypes?.gaming || 'Gaming', icon: '🎮', 
+      description: t.appTypes?.gamingDesc || 'Steam, Epic Games, gaming accounts' },
+    { id: 'general', label: t.appTypes?.general || 'General', icon: '🔑', 
+      description: t.appTypes?.generalDesc || 'For various uses' }
   ];
 
-  // Rozszerzone opcje specjalnych wymagań
-  const requirementOptions = [
-    { id: 'pronounceable', label: 'Łatwe do wymówienia' },
-    { id: 'no-similar', label: 'Bez podobnych znaków (1, l, I, 0, O)' },
-    { id: 'no-consecutive', label: 'Bez sekwencji (123, abc)' },
-    { id: 'include-date', label: 'Zawiera datę/rok' },
-    { id: 'include-initials', label: 'Zawiera inicjały/skrót' },
-    { id: 'no-dictionary', label: 'Bez całych słów słownikowych' },
-    { id: 'memorable-pattern', label: 'Z łatwym do zapamiętania wzorem' },
-    { id: 'include-colors', label: 'Zawiera nazwy kolorów' },
-    { id: 'include-animals', label: 'Zawiera nazwy zwierząt' }
+  // Special requirements options with translations
+  const getRequirementOptions = () => [
+    { id: 'pronounceable', label: t.reqOptions?.pronounceable || 'Easy to pronounce' },
+    { id: 'no-similar', label: t.reqOptions?.noSimilar || 'No similar characters (1, l, I, 0, O)' },
+    { id: 'no-consecutive', label: t.reqOptions?.noConsecutive || 'No sequences (123, abc)' },
+    { id: 'include-date', label: t.reqOptions?.includeDate || 'Include date/year' },
+    { id: 'include-initials', label: t.reqOptions?.includeInitials || 'Include initials/abbreviation' },
+    { id: 'no-dictionary', label: t.reqOptions?.noDictionary || 'No complete dictionary words' },
+    { id: 'memorable-pattern', label: t.reqOptions?.memorablePattern || 'With easy-to-remember pattern' },
+    { id: 'include-colors', label: t.reqOptions?.includeColors || 'Include color names' },
+    { id: 'include-animals', label: t.reqOptions?.includeAnimals || 'Include animal names' }
   ];
 
-  // Pytania dopasowane do typu aplikacji
+  // Contextual questions adapted to the application type and current language
   const getContextQuestions = () => {
+    // Remove unused currentLang variable and directly use the language in the questions
+    // This fixes the ESLint warning
+    
+    // Default questions for each app type - will be overridden by translations if available
     const questions = {
       banking: [
-        "Jakie elementy kojarzą Ci się z finansami?",
-        "Które liczby są dla Ciebie ważne w kontekście finansowym?"
+        t.contextQuestions?.bankingQ1 || "What elements do you associate with finances?",
+        t.contextQuestions?.bankingQ2 || "Which numbers are important to you in a financial context?"
       ],
       email: [
-        "Jakich słów najczęściej używasz w komunikacji?",
-        "Czym charakteryzuje się Twoja poczta elektroniczna?"
+        t.contextQuestions?.emailQ1 || "What words do you use most often in communication?",
+        t.contextQuestions?.emailQ2 || "What characterizes your email?"
       ],
       social: [
-        "Co najbardziej kojarzy Ci się z mediami społecznościowymi, których używasz?",
-        "Jakie są Twoje zainteresowania na platformach społecznościowych?"
+        t.contextQuestions?.socialQ1 || "What do you associate most with the social media you use?",
+        t.contextQuestions?.socialQ2 || "What are your interests on social platforms?"
       ],
       work: [
-        "Jaka jest Twoja rola lub stanowisko w pracy?",
-        "Czym zajmuje się Twoja firma/organizacja?"
+        t.contextQuestions?.workQ1 || "What is your role or position at work?",
+        t.contextQuestions?.workQ2 || "What does your company/organization do?"
       ],
       streaming: [
-        "Jakie są Twoje ulubione filmy, seriale lub muzyka?",
-        "Jakich gatunków najczęściej słuchasz/oglądasz?"
+        t.contextQuestions?.streamingQ1 || "What are your favorite movies, series or music?",
+        t.contextQuestions?.streamingQ2 || "What genres do you watch/listen to most often?"
       ],
       shopping: [
-        "Co najczęściej kupujesz online?",
-        "Jakie są Twoje ulubione marki lub sklepy?"
+        t.contextQuestions?.shoppingQ1 || "What do you buy online most often?",
+        t.contextQuestions?.shoppingQ2 || "What are your favorite brands or stores?"
       ],
       gaming: [
-        "W jakie gry najczęściej grasz?",
-        "Jakie są Twoje ulubione postacie z gier?"
+        t.contextQuestions?.gamingQ1 || "What games do you play most often?",
+        t.contextQuestions?.gamingQ2 || "What are your favorite game characters?"
       ],
       general: [
-        "Czego dotyczy aplikacja/serwis?",
-        "Z czym kojarzy Ci się ta usługa/strona?"
+        t.contextQuestions?.generalQ1 || "What is the application/service about?",
+        t.contextQuestions?.generalQ2 || "What do you associate with this service/site?"
       ]
     };
     
@@ -100,25 +121,24 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     setError('');
     
     try {
-      // Generowanie podsumowania dla AI na podstawie preferencji użytkownika
+      // Generate AI prompt based on user preferences
       const summaryForAI = buildPasswordGenerationPrompt();
       
-      // Wywołanie API z niestandardowym promptem
+      // Call API with custom prompt
       const generatedPasswords = await generateMultiplePasswords({
-        count: 10, // Zawsze 10 propozycji
+        count: 10, // Always 10 proposals
         prompt: summaryForAI,
         language: getCurrentLanguage(),
         type: "password-wizard"
       });
       
-      // Poprawka błędu formatowania - usunięcie znaków ** z początku hasła
+      // Fix formatting issues - remove ** from beginning of password
       const cleanedPasswords = generatedPasswords.map(pwd => {
-        // Jeśli hasło zaczyna się od **, usuń te znaki
         let text = pwd;
         if (text.startsWith('**')) {
           text = text.substring(2);
         }
-        // Jeśli po znaku | też są **, usuń je też
+        // If there's ** after the | character, remove those too
         const parts = text.split('|');
         if (parts.length > 1 && parts[1].startsWith('**')) {
           parts[1] = parts[1].substring(2);
@@ -129,9 +149,9 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
       });
       
       setPasswordList(cleanedPasswords);
-      setStep('list'); // Przejście do widoku listy haseł
+      setStep('list'); // Go to the password list view
     } catch (err) {
-      setError(`Error: ${err.message}`);
+      setError(`${t.error || 'Error'}: ${err.message}`);
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -140,94 +160,114 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   
   // Helper function to build the password generation prompt
   const buildPasswordGenerationPrompt = () => {
-    // Określenie długości hasła na podstawie preferencji zapamiętywalności
+    // Determine password length based on memorability preference
     let securityLevel, length;
     switch (memoryPreference) {
       case 'low': 
-        securityLevel = 'standardowy';
+        securityLevel = t.securityLevel?.standard || 'standard';
         length = '12-14'; 
         break;
       case 'medium': 
-        securityLevel = 'wysoki';
+        securityLevel = t.securityLevel?.high || 'high';
         length = '16-20'; 
         break;
       case 'high': 
-        securityLevel = 'bardzo wysoki';
+        securityLevel = t.securityLevel?.veryHigh || 'very high';
         length = '24-30'; 
         break;
       default: 
-        securityLevel = 'wysoki';
+        securityLevel = t.securityLevel?.high || 'high';
         length = '16-20';
     }
     
-    // Określenie czynnika zapamiętywalności
+    // Determine memorability factor
     let memorability;
     switch (memoryPreference) {
-      case 'low': memorability = 'łatwe do zapamiętania, używaj wzorów, słów i fraz'; break;
-      case 'medium': memorability = 'umiarkowanie łatwe do zapamiętania, balansuj między bezpieczeństwem a łatwością'; break;
-      case 'high': memorability = 'skomplikowane i bardzo bezpieczne, priorytetem jest bezpieczeństwo'; break;
-      default: memorability = 'zbalansowane';
+      case 'low': memorability = t.memorability?.easy || 'easy to remember, use patterns, words and phrases'; break;
+      case 'medium': memorability = t.memorability?.moderate || 'moderately easy to remember, balance between security and ease'; break;
+      case 'high': memorability = t.memorability?.complex || 'complex and very secure, security is the priority'; break;
+      default: memorability = t.memorability?.balanced || 'balanced';
     }
     
-    // Budowanie ciągu specjalnych wymagań
+    // Build special requirements string
     const requirementsList = specialRequirements.map(req => {
       switch(req) {
-        case 'pronounceable': return 'łatwe do wymówienia';
-        case 'no-similar': return 'bez podobnych znaków (1, l, I, 0, O)';
-        case 'no-consecutive': return 'bez sekwencji (123, abc)';
-        case 'include-date': return 'zawiera datę lub rok';
-        case 'include-initials': return 'zawiera inicjały lub skróty';
-        case 'no-dictionary': return 'bez całych słów słownikowych';
-        case 'memorable-pattern': return 'z łatwym do zapamiętania wzorem';
-        case 'include-colors': return 'zawiera odniesienia do kolorów';
-        case 'include-animals': return 'zawiera odniesienia do zwierząt';
+        case 'pronounceable': return t.reqPrompt?.pronounceable || 'easy to pronounce';
+        case 'no-similar': return t.reqPrompt?.noSimilar || 'no similar characters (1, l, I, 0, O)';
+        case 'no-consecutive': return t.reqPrompt?.noConsecutive || 'no sequences (123, abc)';
+        case 'include-date': return t.reqPrompt?.includeDate || 'includes date or year';
+        case 'include-initials': return t.reqPrompt?.includeInitials || 'includes initials or abbreviations';
+        case 'no-dictionary': return t.reqPrompt?.noDictionary || 'no complete dictionary words';
+        case 'memorable-pattern': return t.reqPrompt?.memorablePattern || 'with easy-to-remember pattern';
+        case 'include-colors': return t.reqPrompt?.includeColors || 'includes color references';
+        case 'include-animals': return t.reqPrompt?.includeAnimals || 'includes animal references';
         default: return '';
       }
     }).filter(Boolean).join(', ');
     
-    // Pobranie kontekstu aplikacji
-    const appContext = applicationOptions.find(app => app.id === applicationType)?.label || 'ogólnego użytku';
+    // Get application context
+    const appOptions = getApplicationOptions();
+    const appContext = appOptions.find(app => app.id === applicationType)?.label || t.appTypes?.general || 'general use';
     
-    // Dodanie kontekstu otwartych pytań
-    const contextDetails = customContext.trim() ? `\nDodatkowy kontekst: ${customContext}` : '';
+    // Add context from open questions
+    const contextDetails = customContext.trim() ? 
+      `\n${t.promptLabels?.additionalContext || 'Additional context'}: ${customContext}` : '';
     
-    // Dodanie skojarzeń jeśli są
+    // Add associations if present
     const validAssociations = associations.filter(a => a.trim() !== '');
-    const associationsText = validAssociations.length > 0 
-      ? `\nSkojarzenia: ${validAssociations.join(', ')}` 
-      : '';
+    const associationsText = validAssociations.length > 0 ? 
+      `\n${t.promptLabels?.associations || 'Associations'}: ${validAssociations.join(', ')}` : '';
     
-    // Definicja języka dla AI
-    const languageInstruction = getCurrentLanguage() === "pl" 
-      ? "\nHasła MUSZĄ być wygenerowane w języku polskim. Używaj polskich słów i zwrotów."
-      : "";
+    // Language instruction for AI
+    const currentLang = getCurrentLanguage();
+    const langInstructions = {
+      'en': "\nPasswords MUST be generated in English. Use English words and phrases.",
+      'pl': "\nHasła MUSZĄ być wygenerowane w języku polskim. Użyj polskich słów i zwrotów, z uwzględnieniem polskich znaków.",
+      'de': "\nPasswörter MÜSSEN auf Deutsch generiert werden. Verwenden Sie deutsche Wörter und Ausdrücke.",
+      'fr': "\nLes mots de passe DOIVENT être générés en français. Utilisez des mots et expressions français.",
+      'es': "\nLas contraseñas DEBEN generarse en español. Use palabras y frases en español."
+    };
     
-    return `Wygeneruj 10 propozycji haseł o następujących parametrach:
-    - Długość: ${length} znaków
-    - Poziom bezpieczeństwa: ${securityLevel}
-    - Zapamiętywalność: ${memorability}
-    - Do zastosowania: ${appContext}
-    ${requirementsList ? `- Dodatkowe wymagania: ${requirementsList}` : ''}
-    ${contextDetails}
-    ${associationsText}
-    ${languageInstruction}
+    const languageInstruction = langInstructions[currentLang] || langInstructions.en;
     
-    Hasła powinny być różnorodne, unikalne i nawiązywać do podanego kontekstu. Dla każdego hasła dodaj krótki opis jego struktury lub sposobu na zapamiętanie. Nie dodawaj żadnych dodatkowych tekstów na początku ani na końcu odpowiedzi. Odpowiedz tylko hasłami i podpowiedziami.`;
+    // Create the final prompt
+    const promptTemplate = t.passwordPrompt?.template || `Generate 10 password proposals with the following parameters:
+    - Length: {length} characters
+    - Security level: {securityLevel}
+    - Memorability: {memorability}
+    - For application: {appContext}
+    {requirements}
+    {context}
+    {associations}
+    {language}
+    
+    Passwords should be diverse, unique and reference the given context. For each password, add a brief description of its structure or how to remember it. Don't add any additional text at the beginning or end of the response. Answer only with passwords and hints.`;
+    
+    return promptTemplate
+      .replace('{length}', length)
+      .replace('{securityLevel}', securityLevel)
+      .replace('{memorability}', memorability)
+      .replace('{appContext}', appContext)
+      .replace('{requirements}', requirementsList ? 
+        `\n- ${t.promptLabels?.additionalRequirements || 'Additional requirements'}: ${requirementsList}` : '')
+      .replace('{context}', contextDetails)
+      .replace('{associations}', associationsText)
+      .replace('{language}', languageInstruction);
   };
   
-  // Dodawanie nowego skojarzenia
+  // Add new association
   const addAssociation = () => {
     setAssociations([...associations, '']);
   };
 
-  // Aktualizacja skojarzenia o danym indeksie
+  // Update association at given index
   const updateAssociation = (index, value) => {
     const newAssociations = [...associations];
     newAssociations[index] = value;
     setAssociations(newAssociations);
   };
 
-  // Usuwanie skojarzenia o danym indeksie
+  // Remove association at given index
   const removeAssociation = (index) => {
     if (associations.length > 1) {
       const newAssociations = [...associations];
@@ -238,7 +278,11 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   
   // Helper to detect the current language
   const getCurrentLanguage = () => {
+    // Check for specific Polish phrases for more accurate detection
     if (t.generateButton === "Wygeneruj Hasło") return "pl";
+    if (t.passwordLength === "Długość Hasła") return "pl";
+    
+    // Continue with existing checks for other languages
     if (t.generateButton === "Passwort generieren") return "de";
     if (t.generateButton === "Générer un mot de passe") return "fr";
     if (t.generateButton === "Generar contraseña") return "es";
@@ -274,7 +318,6 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   
   const goBack = () => {
     if (step === 'list') {
-      // Powrót do kreatora zamiast do intro
       setStep('wizard');
       setWizardStep(wizardStep > 0 ? wizardStep - 1 : 0);
     } else if (step === 'customize') {
@@ -289,18 +332,17 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     }
   };
   
-  // Obsługa postępu kreatora
+  // Handle wizard progression
   const nextStep = () => {
-    // Mamy teraz tylko 3 kroki: pamięć, aplikacja, specjalne wymagania + pytania
     if (wizardStep < 2) {
       setWizardStep(wizardStep + 1);
     } else {
-      // Generowanie haseł po osiągnięciu końca kreatora
+      // Generate passwords after reaching the end of the wizard
       generateMultiple();
     }
   };
   
-  // Przełączanie opcji specjalnych wymagań
+  // Toggle special requirements options
   const toggleRequirement = (reqId) => {
     if (specialRequirements.includes(reqId)) {
       setSpecialRequirements(specialRequirements.filter(id => id !== reqId));
@@ -310,54 +352,57 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   };
 
   const passwordStrength = calculatePasswordStrength(password);
+  const memoryOptions = getMemoryOptions();
+  const applicationOptions = getApplicationOptions();
+  const requirementOptions = getRequirementOptions();
 
-  // Ekran intro
+  // Intro screen
   if (step === 'intro') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 border border-gray-200 dark:border-gray-700 text-center">
-          <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8 border border-gray-200 dark:border-gray-700 text-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3 sm:mb-4">
             {t.creativeMode}
           </h2>
           
-          <div className="w-28 h-28 mx-auto mb-8 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-20 h-20 sm:w-28 sm:h-28 mx-auto mb-6 sm:mb-8 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 sm:h-14 sm:w-14 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
           
-          <p className="text-gray-700 dark:text-gray-300 mb-8 max-w-lg mx-auto text-lg">
-            Kreator haseł dopasowanych do Twoich potrzeb. Odpowiedz na kilka pytań, aby wygenerować idealne hasła.
+          <p className="text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 max-w-lg mx-auto text-base sm:text-lg">
+            {t.creativeDescription || 'Password creator tailored to your needs. Answer a few questions to generate the perfect passwords.'}
           </p>
           
-          <ul className="text-left text-gray-600 dark:text-gray-400 mb-10 max-w-md mx-auto space-y-3">
+          <ul className="text-left text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto space-y-2 sm:space-y-3">
             <li className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500 mr-3" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-green-500 mr-2 sm:mr-3" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              <span className="text-lg">Silne i łatwe do zapamiętania</span>
+              <span className="text-base sm:text-lg">{t.creativeFeature1 || 'Strong and easy to remember'}</span>
             </li>
             <li className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500 mr-3" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-green-500 mr-2 sm:mr-3" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              <span className="text-lg">Dopasowane do różnych serwisów</span>
+              <span className="text-base sm:text-lg">{t.creativeFeature2 || 'Tailored to different services'}</span>
             </li>
             <li className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500 mr-3" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-green-500 mr-2 sm:mr-3" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              <span className="text-lg">Z podpowiedziami do zapamiętania</span>
+              <span className="text-base sm:text-lg">{t.creativeFeature3 || 'With memory hints included'}</span>
             </li>
           </ul>
           
           <button
             onClick={() => setStep('wizard')}
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-lg font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+            className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-base sm:text-lg font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
           >
             <span className="flex items-center">
-              Rozpocznij kreator
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" viewBox="0 0 20 20" fill="currentColor">
+              {t.startWizard || 'Start wizard'}
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 ml-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </span>
@@ -367,75 +412,78 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     );
   }
   
-  // Interfejs kreatora
+  // Wizard interface - optimized for single screen on larger displays
   if (step === 'wizard') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 max-w-4xl mx-auto w-full">
-          {/* Nagłówek kreatora ze wskaźnikami postępu */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-5 text-white">
-            <div className="flex justify-between items-center mb-4">
+          {/* Wizard header with progress indicators */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white">
+            <div className="flex justify-between items-center mb-3">
               <button 
                 onClick={goBack}
                 className="p-1.5 rounded-full hover:bg-white/10"
+                aria-label={t.back || 'Back'}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              <h2 className="text-xl font-medium">Kreator hasła</h2>
-              <div className="w-6"></div> {/* Wyrównanie dla symetrii */}
+              <h2 className="text-lg sm:text-xl font-medium">
+                {t.passwordWizard || 'Password Wizard'}
+              </h2>
+              <div className="w-5"></div> {/* Balance symmetry */}
             </div>
             
-            {/* Kropki postępu - teraz tylko 3 kroki */}
+            {/* Progress dots - only 3 steps now */}
             <div className="flex justify-center space-x-3">
               {[0, 1, 2].map((stepNum) => (
                 <div 
                   key={stepNum}
-                  className={`w-3 h-3 rounded-full ${wizardStep >= stepNum ? 'bg-white' : 'bg-white/30'}`}
+                  className={`w-2.5 h-2.5 rounded-full ${wizardStep >= stepNum ? 'bg-white' : 'bg-white/30'}`}
                 ></div>
               ))}
             </div>
           </div>
           
-          {/* Zawartość kreatora */}
-          <div className="p-6">
-            {/* Krok 1: Jak dobrze zapamiętujesz hasła */}
+          {/* Wizard content - height optimized for larger screens */}
+          <div className="p-4 sm:p-5 md:p-6 overflow-y-auto max-h-[calc(100vh-18rem)]">
+            {/* Step 1: How well you remember passwords */}
             {wizardStep === 0 && (
-              <div className="space-y-5">
-                <h3 className="text-2xl font-medium text-gray-800 dark:text-gray-200">
-                  Jak dobrze zapamiętujesz hasła?
+              <div className="space-y-4">
+                <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200">
+                  {t.memoryQuestion || 'How well do you remember passwords?'}
                 </h3>
-                <p className="text-base text-gray-600 dark:text-gray-400 mb-5">
-                  Wybierz opcję, która najlepiej opisuje Twoje preferencje dotyczące zapamiętywalności hasła.
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  {t.memoryInstructions || 'Choose the option that best describes your password memorability preferences.'}
                 </p>
                 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {memoryOptions.map(option => (
                     <div 
                       key={option.id}
                       onClick={() => setMemoryPreference(option.id)}
-                      className={`p-5 rounded-lg border-2 cursor-pointer transition-all ${
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
                         memoryPreference === option.id 
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
                           : 'border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700'
                       }`}
                     >
                       <div className="flex items-center">
-                        <div className={`w-6 h-6 rounded-full mr-3 border-2 flex items-center justify-center ${
+                        <div className={`w-5 h-5 rounded-full mr-3 border-2 flex items-center justify-center ${
                           memoryPreference === option.id 
                             ? 'border-blue-500 bg-blue-500' 
                             : 'border-gray-400'
                         }`}>
                           {memoryPreference === option.id && (
-                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
                           )}
                         </div>
                         <div>
-                          <h4 className="text-lg font-medium text-gray-800 dark:text-gray-200">{option.label}</h4>
-                          <p className="text-base text-gray-600 dark:text-gray-400">{option.description}</p>
+                          <h4 className="text-base sm:text-lg font-medium text-gray-800 dark:text-gray-200">{option.label}</h4>
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{option.description}</p>
                         </div>
                       </div>
                     </div>
@@ -444,37 +492,37 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               </div>
             )}
             
-            {/* Krok 2: Do jakiej aplikacji potrzebujesz hasła - poprawione wyświetlanie */}
+            {/* Step 2: For which application do you need a password */}
             {wizardStep === 1 && (
-              <div className="space-y-5">
-                <h3 className="text-2xl font-medium text-gray-800 dark:text-gray-200">
-                  Do jakiej aplikacji potrzebujesz hasła?
+              <div className="space-y-4">
+                <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200">
+                  {t.appQuestion || 'For which application do you need a password?'}
                 </h3>
-                <p className="text-base text-gray-600 dark:text-gray-400 mb-5">
-                  Wybierz typ serwisu, dla którego tworzysz hasło.
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  {t.appInstructions || 'Choose the type of service you are creating the password for.'}
                 </p>
                 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {applicationOptions.map(option => (
                     <div 
                       key={option.id}
                       onClick={() => setApplicationType(option.id)}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex flex-col items-center justify-between min-h-[140px] ${
+                      className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex flex-col items-center justify-between h-[120px] ${
                         applicationType === option.id 
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
                           : 'border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700'
                       }`}
                     >
-                      <div className="text-3xl mb-2">{option.icon}</div>
+                      <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{option.icon}</div>
                       <div className="text-center">
-                        <h4 className="font-medium text-base text-gray-800 dark:text-gray-200">{option.label}</h4>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{option.description}</p>
+                        <h4 className="font-medium text-sm sm:text-base text-gray-800 dark:text-gray-200">{option.label}</h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{option.description}</p>
                       </div>
                       
-                      {/* Wskaźnik wybrania */}
+                      {/* Selection indicator */}
                       {applicationType === option.id && (
-                        <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <div className="absolute top-1.5 right-1.5 bg-blue-500 text-white rounded-full p-1">
+                          <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </div>
@@ -485,32 +533,32 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               </div>
             )}
             
-            {/* Krok 3: Specjalne wymagania i pytania otwarte */}
+            {/* Step 3: Special requirements and contextual questions */}
             {wizardStep === 2 && (
-              <div className="space-y-6">
-                {/* Specjalne wymagania */}
+              <div className="space-y-5">
+                {/* Special requirements */}
                 <div>
-                  <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200 mb-3">
-                    Specjalne wymagania (opcjonalnie)
+                  <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
+                    {t.specialReq || 'Special Requirements'} <span className="text-sm font-normal text-gray-500">({t.optional || 'optional'})</span>
                   </h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {requirementOptions.map(option => (
                       <div 
                         key={option.id}
-                        className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 cursor-pointer"
+                        className="flex items-center p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 cursor-pointer"
                         onClick={() => toggleRequirement(option.id)}
                       >
                         <input
                           type="checkbox"
                           id={`req-${option.id}`}
                           checked={specialRequirements.includes(option.id)}
-                          onChange={() => {}} // Obsługa przez onClick na całym divie
+                          onChange={() => {}} // Handled by onClick on the div
                           className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
                         <label 
                           htmlFor={`req-${option.id}`}
-                          className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
+                          className="ml-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
                         >
                           {option.label}
                         </label>
@@ -519,53 +567,53 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                   </div>
                 </div>
                 
-                {/* Pytania kontekstowe */}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-5 mt-5">
-                  <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200 mb-4">
-                    Podaj dodatkowy kontekst (opcjonalnie)
+                {/* Contextual questions */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                  <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-3">
+                    {t.additionalContext || 'Additional Context'} <span className="text-sm font-normal text-gray-500">({t.optional || 'optional'})</span>
                   </h3>
                   
-                  <div className="space-y-4">
-                    {/* Pytanie o aplikację */}
+                  <div className="space-y-3">
+                    {/* Application-specific context */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                         {getContextQuestions()[0]}
                       </label>
                       <textarea
                         value={customContext}
                         onChange={(e) => setCustomContext(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 min-h-[80px] resize-none"
-                        placeholder="Podaj opis lub pozostaw puste..."
+                        className="block w-full rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm min-h-[70px] resize-none"
+                        placeholder={t.contextPlaceholder || "Provide description or leave empty..."}
                       />
                     </div>
                     
-                    {/* Skojarzenia */}
+                    {/* Associations - clearly marked as optional */}
                     <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Dodatkowe skojarzenia:
+                      <div className="flex justify-between items-center mb-1.5">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t.associations || 'Additional associations'}: <span className="font-normal text-gray-500 text-xs">({t.optional || 'optional'})</span>
                         </label>
                         <button
                           onClick={addAssociation}
-                          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center"
+                          className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center"
                           type="button"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
                           </svg>
-                          Dodaj skojarzenie
+                          {t.addAssociation || 'Add association'}
                         </button>
                       </div>
                       
-                      <div className="space-y-2">
+                      <div className="space-y-2 max-h-[120px] overflow-y-auto">
                         {associations.map((association, index) => (
                           <div key={index} className="flex items-center">
                             <input
                               type="text"
                               value={association}
                               onChange={(e) => updateAssociation(index, e.target.value)}
-                              className="block flex-grow rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="Np. wakacje, hobby, ulubiona rzecz..."
+                              className="block flex-grow rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
+                              placeholder={t.associationPlaceholder || "E.g., hobby, favorite thing..."}
                             />
                             {associations.length > 1 && (
                               <button
@@ -573,7 +621,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                                 className="ml-2 p-1 text-gray-500 hover:text-red-500"
                                 type="button"
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                 </svg>
                               </button>
@@ -588,18 +636,20 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
             )}
           </div>
           
-          {/* Stopka kreatora */}
-          <div className="border-t border-gray-200 dark:border-gray-700 p-5 flex justify-between">
+          {/* Wizard footer with improved translation support */}
+          <div className="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-between">
             <button
               onClick={goBack}
-              className="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
             >
-              {wizardStep === 0 ? 'Anuluj' : 'Wstecz'}
+              {wizardStep === 0 
+                ? (t.cancel || 'Cancel') 
+                : (t.back || 'Back')}
             </button>
             <button
               onClick={nextStep}
               disabled={isLoading}
-              className="px-5 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center">
@@ -607,9 +657,11 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Generowanie...
+                  {t.generating || 'Generating...'}
                 </span>
-              ) : wizardStep < 2 ? 'Dalej' : 'Generuj hasła'}
+              ) : wizardStep < 2 
+                ? (t.next || 'Next') 
+                : (t.generatePasswords || 'Generate Passwords')}
             </button>
           </div>
         </div>
@@ -617,14 +669,14 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     );
   }
   
-  // Wyświetlanie wygenerowanej listy haseł
+  // Password list display
   if (step === 'list') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 max-w-4xl mx-auto w-full">
-          <div className="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-            <h2 className="text-xl font-medium text-gray-700 dark:text-gray-200">
-              Propozycje haseł
+          <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+            <h2 className="text-lg font-medium text-gray-700 dark:text-gray-200">
+              {t.passwordSuggestions || 'Password Suggestions'}
             </h2>
             <button
               onClick={goBack}
@@ -636,15 +688,15 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
             </button>
           </div>
           
-          <div className="p-5">
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-5">
-              Wybierz hasło, które najbardziej Ci odpowiada, lub skopiuj je bezpośrednio:
+          <div className="p-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              {t.selectPasswordPrompt || 'Choose the password that suits you best, or copy it directly:'}
             </p>
             
-            <div className="space-y-4">
+            <div className="space-y-3 max-h-[calc(100vh-18rem)] overflow-y-auto">
               {passwordList.length > 0 ? (
                 passwordList.map((pwd, index) => {
-                  // Rozdziel hasło i wskazówkę, obsługując przypadki bez znaku |
+                  // Split password and hint, handling cases without the | character
                   const parts = pwd.text.split('|');
                   const password = parts[0].trim();
                   const hint = parts.length > 1 ? parts[1].trim() : '';
@@ -652,24 +704,24 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                   return (
                     <div 
                       key={index} 
-                      className="flex flex-col p-4 bg-gray-50 dark:bg-gray-750 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                      className="flex flex-col p-3 bg-gray-50 dark:bg-gray-750 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                     >
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="font-mono text-lg font-medium">
+                      <div className="flex justify-between items-center mb-1.5">
+                        <div className="font-mono text-base font-medium overflow-x-auto scrollbar-thin">
                           {password}
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-2 flex-shrink-0">
                           <button
                             onClick={() => copyFromList(password, index)}
-                            className="p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
-                            title="Kopiuj hasło"
+                            className="p-1.5 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                            title={t.copyPassword || "Copy password"}
                           >
                             {pwd.copied ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
                                 <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
                               </svg>
@@ -677,10 +729,10 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                           </button>
                           <button
                             onClick={() => handleSelectPassword(password, index)}
-                            className="p-2 rounded-md bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-800/30 text-blue-700 dark:text-blue-400"
-                            title="Szczegóły hasła"
+                            className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-800/30 text-blue-700 dark:text-blue-400"
+                            title={t.passwordDetails || "Password details"}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                               <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                             </svg>
@@ -688,45 +740,52 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                         </div>
                       </div>
                       
-                      {/* Wskazówka do hasła */}
+                      {/* Password hint */}
                       {hint && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 border-t border-gray-200 dark:border-gray-600 pt-2">
-                          <span className="font-medium">Wskazówka:</span> {hint}
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1.5 border-t border-gray-200 dark:border-gray-600 pt-1.5">
+                          <span className="font-medium">{t.hint || 'Hint'}:</span> {hint}
                         </p>
                       )}
                     </div>
                   );
                 })
+              ) : error ? (
+                <div className="text-center py-8 text-red-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-3 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p>{error}</p>
+                </div>
               ) : (
-                <div className="text-center py-10 text-gray-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="text-center py-8 text-gray-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                   </svg>
-                  <p>Nie znaleziono żadnych haseł. Spróbuj wygenerować nowe.</p>
+                  <p>{t.noPasswordsFound || 'No passwords found. Try generating new ones.'}</p>
                 </div>
               )}
             </div>
             
-            {/* Przycisk do generowania większej liczby haseł */}
+            {/* Button to generate more passwords */}
             <button
               onClick={generateMultiple}
               disabled={isLoading}
-              className="w-full mt-6 p-3 bg-blue-600 hover:bg-blue-700 text-white text-base font-medium rounded-md transition-all flex items-center justify-center"
+              className="w-full mt-5 p-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Generowanie...
+                  {t.generating || 'Generating...'}
                 </span>
               ) : (
                 <>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
                   </svg>
-                  Wygeneruj nowe propozycje
+                  {t.generateNewSuggestions || 'Generate new suggestions'}
                 </>
               )}
             </button>
@@ -736,15 +795,15 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     );
   }
   
-  // Widok szczegółów hasła
+  // Password details view
   if (step === 'customize') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
-        {/* Kontener wyświetlania hasła */}
+        {/* Password display container */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 max-w-4xl mx-auto w-full">
-          <div className="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-            <h2 className="text-xl font-medium text-gray-700 dark:text-gray-200">
-              Analiza hasła
+          <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+            <h2 className="text-lg font-medium text-gray-700 dark:text-gray-200">
+              {t.passwordAnalysis || 'Password Analysis'}
             </h2>
             <button
               onClick={goBack}
@@ -756,21 +815,21 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
             </button>
           </div>
           
-          {/* Wyświetlanie hasła */}
-          <div className="p-6">
-            <div className="flex items-center justify-center p-5 bg-gray-50 dark:bg-gray-750 rounded-lg border-2 border-gray-200 dark:border-gray-600">
-              <div className="font-mono text-2xl font-medium break-all">
+          {/* Password display */}
+          <div className="p-4 sm:p-5">
+            <div className="flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-750 rounded-lg border-2 border-gray-200 dark:border-gray-600 overflow-x-auto">
+              <div className="font-mono text-xl font-medium break-all">
                 {password}
               </div>
             </div>
             
-            {/* Wskaźnik siły */}
-            <div className="mt-5">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-base text-gray-600 dark:text-gray-400">Siła hasła:</span>
-                <span className="text-base font-medium">{getStrengthText(passwordStrength)}</span>
+            {/* Strength indicator */}
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm text-gray-600 dark:text-gray-400">{t.passwordStrength?.label || 'Password strength'}:</span>
+                <span className="text-sm font-medium">{getStrengthText(passwordStrength)}</span>
               </div>
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                 <div 
                   className={`h-full ${getStrengthColor(passwordStrength)} transition-all`}
                   style={{ width: `${(passwordStrength + 1) * 20}%` }}
@@ -778,69 +837,68 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               </div>
             </div>
             
-            {/* Analiza znaków */}
-            <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-4 text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            {/* Character analysis */}
+            <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {password.length}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Długość</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{t.length || 'Length'}</div>
               </div>
               
-              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-4 text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {(password.match(/[A-Z]/g) || []).length}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Wielkie litery</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{t.uppercase || 'Uppercase'}</div>
               </div>
               
-              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-4 text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {(password.match(/[a-z]/g) || []).length}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Małe litery</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{t.lowercase || 'Lowercase'}</div>
               </div>
               
-              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-4 text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {(password.match(/[0-9]/g) || []).length}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Cyfry</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{t.numbers || 'Numbers'}</div>
               </div>
 
-              {/* Dodatkowe mierniki */}
-              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-4 text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              {/* Additional metrics */}
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {(password.match(/[^A-Za-z0-9]/g) || []).length}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Znaki specjalne</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{t.specialChars || 'Special chars'}</div>
               </div>
               
-              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-4 text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {new Set(password).size}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Unikalne znaki</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{t.uniqueChars || 'Unique chars'}</div>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-4 text-center col-span-2">
-                <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
-                  {/* Wyświetlenie przybliżonego czasu złamania hasła */}
-                  {passwordStrength < 2 ? "< 1 dzień" : 
-                   passwordStrength === 2 ? "kilka miesięcy" :
-                   passwordStrength === 3 ? "kilka lat" : 
-                   "setki lat"}
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center col-span-2">
+                <div className="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400">
+                  {passwordStrength < 2 ? t.crackTime?.veryFast || "< 1 day" : 
+                   passwordStrength === 2 ? t.crackTime?.moderate || "several months" :
+                   passwordStrength === 3 ? t.crackTime?.slow || "several years" : 
+                   t.crackTime?.veryLong || "centuries"}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Szacowany czas złamania</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{t.estimatedCrackTime || 'Estimated crack time'}</div>
               </div>
             </div>
           </div>
           
-          {/* Przyciski akcji */}
-          <div className="p-5 bg-gray-50 dark:bg-gray-750 border-t border-gray-200 dark:border-gray-600">
+          {/* Action buttons */}
+          <div className="p-4 bg-gray-50 dark:bg-gray-750 border-t border-gray-200 dark:border-gray-600">
             <button
               onClick={copyToClipboard}
-              className={`w-full flex items-center justify-center py-3 px-4 rounded-md text-base font-medium transition-all ${
+              className={`w-full flex items-center justify-center py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
                 copied
                   ? 'bg-emerald-500 text-white'
                   : 'bg-blue-600 hover:bg-blue-700 text-white'
