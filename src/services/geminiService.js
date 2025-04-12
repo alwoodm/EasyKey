@@ -76,23 +76,30 @@ export const generateCreativePassword = async (options) => {
  * Generuje wiele bezpiecznych haseł lub wierszy przy użyciu Gemini API
  * 
  * @param {Object} options Opcje generowania
- * @param {number} options.count Liczba haseł do wygenerowania (max 10)
+ * @param {number} options.count Liczba haseł do wygenerowania (max 15)
  * @param {number} options.length Długość każdego hasła
  * @param {boolean} options.uppercase Czy zawierać wielkie litery
  * @param {boolean} options.lowercase Czy zawierać małe litery
  * @param {boolean} options.numbers Czy zawierać cyfry
  * @param {boolean} options.symbols Czy zawierać znaki specjalne
  * @param {string} options.language Język haseł (en, pl, de, fr, es)
- * @param {string} options.type Typ generowanego tekstu ("password" lub "poem")
+ * @param {string} options.type Typ generowanego tekstu ("password", "poem", "password-wizard")
+ * @param {string} options.prompt Niestandardowe instrukcje dla generatora (używane dla password-wizard)
  * @returns {Promise<string[]>} Lista wygenerowanych haseł lub wierszy
  */
 export const generateMultiplePasswords = async (options) => {
   try {
-    const count = Math.min(options.count || 5, 10); // Maksymalnie 10 elementów
+    const count = Math.min(options.count || 5, 15); // Maksymalnie 15 elementów
     let instructions = "";
     
-    // Sprawdź, czy mamy generować wiersze czy hasła
-    if (options.type === "poem") {
+    // Wybieramy instrukcje bazując na typie generowanego tekstu
+    if (options.type === "password-wizard") {
+      // Używamy niestandardowego promptu dostarczanego z opcji
+      instructions = options.prompt + `\n\nKażda propozycja powinna mieć format: "HASŁO|WSKAZÓWKA", 
+        gdzie HASŁO to wygenerowane hasło, a WSKAZÓWKA to krótki opis, jak zapamiętać to hasło.
+        Wygeneruj dokładnie ${count} propozycji.`;
+    }
+    else if (options.type === "poem") {
       // Instrukcje dla generowania wierszy w odpowiednim języku
       switch(options.language) {
         case 'pl':
@@ -196,6 +203,16 @@ export const generateMultiplePasswords = async (options) => {
       items = text.split('---')
         .map(poem => poem.trim())
         .filter(poem => poem !== '');
+    } else if (options.type === "password-wizard") {
+      items = text.split(/\r?\n/)
+        .filter(line => line.trim() !== '')
+        .map(line => {
+          // For password-wizard, each item should be in format: PASSWORD|HINT
+          if (!line.includes('|')) {
+            return line + '|';
+          }
+          return line;
+        });
     } else {
       items = text.split('\n')
         .map(pwd => pwd.trim())
