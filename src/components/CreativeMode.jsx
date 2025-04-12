@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
-import { generateCreativePassword, generateMultiplePasswords } from '../services/geminiService';
+import { generateMultiplePasswords } from '../services/geminiService';
 import { Icons } from './Icons';
 
 const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStrengthColor }) => {
   // Base state variables
   const [password, setPassword] = useState('');
-  const [passwordLength, setPasswordLength] = useState(14);
-  const [includeUppercase, setIncludeUppercase] = useState(true);
-  const [includeLowercase, setIncludeLowercase] = useState(true);
-  const [includeNumbers, setIncludeNumbers] = useState(true);
-  const [includeSymbols, setIncludeSymbols] = useState(true);
-  const [context, setContext] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
@@ -27,15 +21,6 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   const [securityLevel, setSecurityLevel] = useState('high');
   const [specialRequirements, setSpecialRequirements] = useState([]);
   const [passwordCount, setPasswordCount] = useState(10);
-  const [wizardSummary, setWizardSummary] = useState('');
-  
-  // Character type preferences
-  const characterTypesDescriptions = {
-    'uppercase': 'Wielkie litery (A-Z)',
-    'lowercase': 'Małe litery (a-z)',
-    'numbers': 'Cyfry (0-9)',
-    'symbols': 'Znaki specjalne (!@#$%^&*)'
-  };
   
   // Memory preference options
   const memoryOptions = [
@@ -71,10 +56,6 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     { id: 'include-date', label: 'Zawiera datę/rok' }
   ];
 
-  const generatePassword = async () => {
-    // ...existing code...
-  };
-
   const generateMultiple = async () => {
     setIsLoading(true);
     setError('');
@@ -82,7 +63,6 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     try {
       // Generate a summary for the AI based on user preferences
       const summaryForAI = buildPasswordGenerationPrompt();
-      setWizardSummary(summaryForAI);
       
       // Call the API with our custom prompt
       const generatedPasswords = await generateMultiplePasswords({
