@@ -74,42 +74,63 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
 
   // Contextual questions adapted to the application type and current language
   const getContextQuestions = () => {
-    // Remove unused currentLang variable and directly use the language in the questions
-    // This fixes the ESLint warning
-    
-    // Default questions for each app type - will be overridden by translations if available
+    // Default questions for each app type with expanded question set
     const questions = {
       banking: [
         t.contextQuestions?.bankingQ1 || "What elements do you associate with finances?",
-        t.contextQuestions?.bankingQ2 || "Which numbers are important to you in a financial context?"
+        t.contextQuestions?.bankingQ2 || "Which numbers are important to you in a financial context?",
+        t.contextQuestions?.bankingQ3 || "What banks or financial institutions do you use?",
+        t.contextQuestions?.bankingQ4 || "Do you have any financial goals or milestones?",
+        t.contextQuestions?.bankingQ5 || "What financial terms are meaningful to you?"
       ],
       email: [
         t.contextQuestions?.emailQ1 || "What words do you use most often in communication?",
-        t.contextQuestions?.emailQ2 || "What characterizes your email?"
+        t.contextQuestions?.emailQ2 || "What characterizes your email?",
+        t.contextQuestions?.emailQ3 || "What is the purpose of this email account?",
+        t.contextQuestions?.emailQ4 || "What domain provider do you use for email?",
+        t.contextQuestions?.emailQ5 || "Do you have any specific email folders that are important?"
       ],
       social: [
         t.contextQuestions?.socialQ1 || "What do you associate most with the social media you use?",
-        t.contextQuestions?.socialQ2 || "What are your interests on social platforms?"
+        t.contextQuestions?.socialQ2 || "What are your interests on social platforms?",
+        t.contextQuestions?.socialQ3 || "Which social media platforms do you use most often?",
+        t.contextQuestions?.socialQ4 || "What type of content do you usually engage with?",
+        t.contextQuestions?.socialQ5 || "Do you have any favorite hashtags or topics?"
       ],
       work: [
         t.contextQuestions?.workQ1 || "What is your role or position at work?",
-        t.contextQuestions?.workQ2 || "What does your company/organization do?"
+        t.contextQuestions?.workQ2 || "What does your company/organization do?",
+        t.contextQuestions?.workQ3 || "What tools or software do you use at work?",
+        t.contextQuestions?.workQ4 || "What are your professional goals or achievements?",
+        t.contextQuestions?.workQ5 || "What industry terms are familiar to you?"
       ],
       streaming: [
         t.contextQuestions?.streamingQ1 || "What are your favorite movies, series or music?",
-        t.contextQuestions?.streamingQ2 || "What genres do you watch/listen to most often?"
+        t.contextQuestions?.streamingQ2 || "What genres do you watch/listen to most often?",
+        t.contextQuestions?.streamingQ3 || "Which streaming platforms do you use?",
+        t.contextQuestions?.streamingQ4 || "Who are your favorite actors, directors, or musicians?",
+        t.contextQuestions?.streamingQ5 || "What was the last show or album you really enjoyed?"
       ],
       shopping: [
         t.contextQuestions?.shoppingQ1 || "What do you buy online most often?",
-        t.contextQuestions?.shoppingQ2 || "What are your favorite brands or stores?"
+        t.contextQuestions?.shoppingQ2 || "What are your favorite brands or stores?",
+        t.contextQuestions?.shoppingQ3 || "What types of products interest you the most?",
+        t.contextQuestions?.shoppingQ4 || "Do you participate in any loyalty programs?",
+        t.contextQuestions?.shoppingQ5 || "What was your most recent or significant purchase?"
       ],
       gaming: [
         t.contextQuestions?.gamingQ1 || "What games do you play most often?",
-        t.contextQuestions?.gamingQ2 || "What are your favorite game characters?"
+        t.contextQuestions?.gamingQ2 || "What are your favorite game characters?",
+        t.contextQuestions?.gamingQ3 || "What gaming platforms or services do you use?",
+        t.contextQuestions?.gamingQ4 || "What game genres do you prefer?",
+        t.contextQuestions?.gamingQ5 || "What gaming achievements are you proud of?"
       ],
       general: [
         t.contextQuestions?.generalQ1 || "What is the application/service about?",
-        t.contextQuestions?.generalQ2 || "What do you associate with this service/site?"
+        t.contextQuestions?.generalQ2 || "What do you associate with this service/site?",
+        t.contextQuestions?.generalQ3 || "How often do you use this application?",
+        t.contextQuestions?.generalQ4 || "What is the main purpose for using this service?",
+        t.contextQuestions?.generalQ5 || "Are there any specific features you value most?"
       ]
     };
     
@@ -574,20 +595,34 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                   </h3>
                   
                   <div className="space-y-3">
-                    {/* Application-specific context */}
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                        {getContextQuestions()[0]}
-                      </label>
-                      <textarea
-                        value={customContext}
-                        onChange={(e) => setCustomContext(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm min-h-[70px] resize-none"
-                        placeholder={t.contextPlaceholder || "Provide description or leave empty..."}
-                      />
+                    {/* Show multiple context questions with a dropdown or selection */}
+                    <div className="p-3 bg-gray-50 dark:bg-gray-750 rounded-md border border-gray-200 dark:border-gray-600">
+                      <div className="mb-2 flex justify-between items-center">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t.contextQuestionTitle || 'Answer any of these questions that might help:'}
+                        </label>
+                      </div>
+                      
+                      <div className="space-y-2 max-h-[180px] overflow-y-auto px-1 py-2">
+                        {getContextQuestions().map((question, idx) => (
+                          <div key={idx} className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                            • {question}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Context input field */}
+                      <div className="mt-3">
+                        <textarea
+                          value={customContext}
+                          onChange={(e) => setCustomContext(e.target.value)}
+                          className="block w-full rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm min-h-[70px] resize-none"
+                          placeholder={t.contextPlaceholder || "Provide description or leave empty..."}
+                        />
+                      </div>
                     </div>
                     
-                    {/* Associations - clearly marked as optional */}
+                    {/* Associations section - fixed styling */}
                     <div>
                       <div className="flex justify-between items-center mb-1.5">
                         <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -605,7 +640,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                         </button>
                       </div>
                       
-                      <div className="space-y-2 max-h-[120px] overflow-y-auto">
+                      <div className="space-y-2 max-h-[120px] overflow-y-auto px-0.5">
                         {associations.map((association, index) => (
                           <div key={index} className="flex items-center">
                             <input
