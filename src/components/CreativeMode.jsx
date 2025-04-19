@@ -528,16 +528,16 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                     <div 
                       key={option.id}
                       onClick={() => setApplicationType(option.id)}
-                      className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex flex-col items-center justify-between h-[120px] ${
+                      className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex flex-col items-center justify-between min-h-[120px] ${
                         applicationType === option.id 
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
                           : 'border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700'
                       }`}
                     >
                       <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{option.icon}</div>
-                      <div className="text-center">
-                        <h4 className="font-medium text-sm sm:text-base text-gray-800 dark:text-gray-200">{option.label}</h4>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{option.description}</p>
+                      <div className="text-center w-full">
+                        <h4 className="font-medium text-xs sm:text-sm md:text-base text-gray-800 dark:text-gray-200 line-clamp-1">{option.label}</h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2 overflow-hidden break-words">{option.description}</p>
                       </div>
                       
                       {/* Selection indicator */}
@@ -717,7 +717,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               onClick={goBack}
               className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 20 20" stroke="currentColor">
                 <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
               </svg>
             </button>
@@ -844,7 +844,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               onClick={goBack}
               className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 20 20" stroke="currentColor">
                 <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
               </svg>
             </button>
