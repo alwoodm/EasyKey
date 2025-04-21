@@ -297,16 +297,21 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     }
   };
   
-  // Helper to detect the current language
+  // Udoskonalona funkcja wykrywania języka dla poprawnych tłumaczeń
   const getCurrentLanguage = () => {
-    // Check for specific Polish phrases for more accurate detection
-    if (t.generateButton === "Wygeneruj Hasło") return "pl";
-    if (t.passwordLength === "Długość Hasła") return "pl";
+    // Bardziej precyzyjne wykrywanie języka polskiego
+    if (t.generateButton === "Wygeneruj Hasło" || 
+        t.passwordLength === "Długość Hasła" || 
+        t.copyButton === "Kopiuj") {
+      return "pl";
+    }
     
-    // Continue with existing checks for other languages
+    // Wykrywanie innych języków
     if (t.generateButton === "Passwort generieren") return "de";
     if (t.generateButton === "Générer un mot de passe") return "fr";
     if (t.generateButton === "Generar contraseña") return "es";
+    
+    // Domyślnie angielski
     return "en";
   };
 
@@ -377,13 +382,13 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
   const applicationOptions = getApplicationOptions();
   const requirementOptions = getRequirementOptions();
 
-  // Intro screen
+  // Intro screen - poprawka tłumaczeń
   if (step === 'intro') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8 border border-gray-200 dark:border-gray-700 text-center">
           <h2 className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3 sm:mb-4">
-            {t.creativeMode}
+            {t.creativeMode || 'Creative Mode'}
           </h2>
           
           <div className="w-20 h-20 sm:w-28 sm:h-28 mx-auto mb-6 sm:mb-8 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center">
@@ -433,7 +438,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     );
   }
   
-  // Wizard interface - optimized for single screen on larger displays
+  // Wizard interface - poprawka tłumaczeń
   if (step === 'wizard') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
@@ -473,10 +478,10 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
             {wizardStep === 0 && (
               <div className="space-y-4">
                 <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200">
-                  {t.memoryQuestion || 'How well do you remember passwords?'}
+                  {t.memoryQuestion || 'Jak dobrze zapamiętujesz hasła?'}
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  {t.memoryInstructions || 'Choose the option that best describes your password memorability preferences.'}
+                  {t.memoryInstructions || 'Wybierz opcję, która najlepiej opisuje Twoje preferencje dotyczące zapamiętywania haseł.'}
                 </p>
                 
                 <div className="space-y-3">
@@ -517,10 +522,10 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
             {wizardStep === 1 && (
               <div className="space-y-4">
                 <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200">
-                  {t.appQuestion || 'For which application do you need a password?'}
+                  {t.appQuestion || 'Dla jakiej aplikacji potrzebujesz hasła?'}
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  {t.appInstructions || 'Choose the type of service you are creating the password for.'}
+                  {t.appInstructions || 'Wybierz rodzaj usługi, dla której tworzysz hasło.'}
                 </p>
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -560,7 +565,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                 {/* Special requirements */}
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
-                    {t.specialReq || 'Special Requirements'} <span className="text-sm font-normal text-gray-500">({t.optional || 'optional'})</span>
+                    {t.specialReq || 'Specjalne wymagania'} <span className="text-sm font-normal text-gray-500">({t.optional || 'opcjonalne'})</span>
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -591,7 +596,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                 {/* Contextual questions */}
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                   <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-3">
-                    {t.additionalContext || 'Additional Context'} <span className="text-sm font-normal text-gray-500">({t.optional || 'optional'})</span>
+                    {t.additionalContext || 'Dodatkowy kontekst'} <span className="text-sm font-normal text-gray-500">({t.optional || 'opcjonalne'})</span>
                   </h3>
                   
                   <div className="space-y-3">
@@ -599,7 +604,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                     <div className="p-3 bg-gray-50 dark:bg-gray-750 rounded-md border border-gray-200 dark:border-gray-600">
                       <div className="mb-2 flex justify-between items-center">
                         <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t.contextQuestionTitle || 'Answer any of these questions that might help:'}
+                          {t.contextQuestionTitle || 'Odpowiedz na dowolne z tych pytań, które mogą pomóc:'}
                         </label>
                       </div>
                       
@@ -617,16 +622,16 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                           value={customContext}
                           onChange={(e) => setCustomContext(e.target.value)}
                           className="block w-full rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm min-h-[70px] resize-none"
-                          placeholder={t.contextPlaceholder || "Provide description or leave empty..."}
+                          placeholder={t.contextPlaceholder || 'Podaj opis lub pozostaw puste...'}
                         />
                       </div>
                     </div>
                     
-                    {/* Associations section - fixed styling */}
+                    {/* Associations section */}
                     <div>
                       <div className="flex justify-between items-center mb-1.5">
                         <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t.associations || 'Additional associations'}: <span className="font-normal text-gray-500 text-xs">({t.optional || 'optional'})</span>
+                          {t.associations || 'Dodatkowe skojarzenia'}: <span className="font-normal text-gray-500 text-xs">({t.optional || 'opcjonalne'})</span>
                         </label>
                         <button
                           onClick={addAssociation}
@@ -636,7 +641,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
                           </svg>
-                          {t.addAssociation || 'Add association'}
+                          {t.addAssociation || 'Dodaj skojarzenie'}
                         </button>
                       </div>
                       
@@ -648,7 +653,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                               value={association}
                               onChange={(e) => updateAssociation(index, e.target.value)}
                               className="block flex-grow rounded-md border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
-                              placeholder={t.associationPlaceholder || "E.g., hobby, favorite thing..."}
+                              placeholder={t.associationPlaceholder || 'Np. hobby, ulubiona rzecz...'}
                             />
                             {associations.length > 1 && (
                               <button
@@ -657,7 +662,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                                 type="button"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L5.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                 </svg>
                               </button>
                             )}
@@ -671,7 +676,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
             )}
           </div>
           
-          {/* Wizard footer with improved translation support */}
+          {/* Wizard footer z poprawionymi tłumaczeniami */}
           <div className="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-between">
             <button
               onClick={goBack}
@@ -704,7 +709,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     );
   }
   
-  // Password list display
+  // Password list display - poprawione tłumaczenia
   if (step === 'list') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
@@ -775,7 +780,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
                         </div>
                       </div>
                       
-                      {/* Password hint */}
+                      {/* Password hint - poprawione tłumaczenie */}
                       {hint && (
                         <p className="text-xs text-gray-600 dark:text-gray-400 mt-1.5 border-t border-gray-200 dark:border-gray-600 pt-1.5">
                           <span className="font-medium">{t.hint || 'Hint'}:</span> {hint}
@@ -830,7 +835,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
     );
   }
   
-  // Password details view
+  // Password details view - poprawione tłumaczenia
   if (step === 'customize') {
     return (
       <div className="flex-grow flex flex-col space-y-4">
@@ -858,10 +863,14 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               </div>
             </div>
             
-            {/* Strength indicator */}
+            {/* Strength indicator - pełne wsparcie dla tłumaczeń */}
             <div className="mt-4">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-sm text-gray-600 dark:text-gray-400">{t.passwordStrength?.label || 'Password strength'}:</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {typeof t.passwordStrength === 'object' ? 
+                    (t.passwordStrength.label || 'Password strength') : 
+                    (t.passwordStrength || 'Password strength')}:
+                </span>
                 <span className="text-sm font-medium">{getStrengthText(passwordStrength)}</span>
               </div>
               <div className="h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -872,7 +881,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               </div>
             </div>
             
-            {/* Character analysis */}
+            {/* Character analysis - poprawione odwołania do tłumaczeń */}
             <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
               <div className="bg-gray-50 dark:bg-gray-750 rounded-md p-3 text-center">
                 <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -929,7 +938,7 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
             </div>
           </div>
           
-          {/* Action buttons */}
+          {/* Action buttons - poprawione tłumaczenie przycisków */}
           <div className="p-4 bg-gray-50 dark:bg-gray-750 border-t border-gray-200 dark:border-gray-600">
             <button
               onClick={copyToClipboard}
@@ -942,12 +951,12 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
               {copied ? (
                 <>
                   <span className="mr-2">{Icons.check}</span>
-                  {t.copiedToClipboard}
+                  {t.copiedToClipboard || 'Copied!'}
                 </>
               ) : (
                 <>
                   <span className="mr-2">{Icons.copy}</span>
-                  {t.copyButton}
+                  {t.copyButton || 'Copy'}
                 </>
               )}
             </button>
@@ -956,6 +965,8 @@ const CreativeMode = ({ t, calculatePasswordStrength, getStrengthText, getStreng
       </div>
     );
   }
+
+  return null; // Dodaję domyślny zwrot, aby uniknąć problemów z renderowaniem
 };
 
 export default CreativeMode;

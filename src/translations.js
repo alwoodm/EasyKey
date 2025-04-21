@@ -201,10 +201,10 @@ const translations = {
     copyButton: "Kopiuj",
     copiedToClipboard: "Skopiowano!",
     passwordLength: "Długość Hasła",
-    includeUppercase: "Wielkie (A-Z)",
-    includeLowercase: "Małe (a-z)",
+    includeUppercase: "Wielkie litery (A-Z)",
+    includeLowercase: "Małe litery (a-z)",
     includeNumbers: "Cyfry (0-9)",
-    includeSymbols: "Znaki spec. (!@#$)",
+    includeSymbols: "Znaki specjalne (!@#$)",
     generatedPassword: "Twoje Hasło",
     passwordStrength: {
       veryWeak: "Bardzo Słabe",
@@ -215,9 +215,9 @@ const translations = {
     },
     settings: "Ustawienia",
     theme: {
-      auto: "Motyw Auto",
-      light: "Jasny",
-      dark: "Ciemny"
+      auto: "Motyw Automatyczny",
+      light: "Tryb Jasny",
+      dark: "Tryb Ciemny"
     },
     language: "Język",
     noPasswordYet: "Wygeneruj hasło, aby zobaczyć je tutaj",
@@ -266,6 +266,8 @@ const translations = {
       complex: "Złożone",
       complexDesc: "Trudniejsze do zapamiętania, ale bardzo bezpieczne"
     },
+    appQuestion: "Dla jakiej aplikacji potrzebujesz hasła?",
+    appInstructions: "Wybierz typ usługi, dla której tworzysz hasło.",
     appTypes: {
       banking: "Bankowość",
       bankingDesc: "Konta bankowe, finanse, płatności",
@@ -295,6 +297,86 @@ const translations = {
       memorablePattern: "Z łatwym do zapamiętania wzorem",
       includeColors: "Zawiera nazwy kolorów",
       includeAnimals: "Zawiera nazwy zwierząt"
+    },
+    reqPrompt: {
+      pronounceable: "łatwe do wymówienia",
+      noSimilar: "bez podobnych znaków (1, l, I, 0, O)",
+      noConsecutive: "bez sekwencji (123, abc)",
+      includeDate: "zawiera datę lub rok",
+      includeInitials: "zawiera inicjały lub skróty",
+      noDictionary: "bez pełnych słów słownikowych",
+      memorablePattern: "z łatwym do zapamiętania wzorem",
+      includeColors: "zawiera odniesienia do kolorów",
+      includeAnimals: "zawiera odniesienia do zwierząt"
+    },
+    securityLevel: {
+      standard: "standardowy",
+      high: "wysoki",
+      veryHigh: "bardzo wysoki"
+    },
+    memorability: {
+      easy: "łatwe do zapamiętania, użyj wzorów, słów i fraz",
+      moderate: "umiarkowanie łatwe do zapamiętania, równowaga między bezpieczeństwem a łatwością",
+      complex: "złożone i bardzo bezpieczne, bezpieczeństwo jest priorytetem",
+      balanced: "zbalansowane"
+    },
+    additionalContext: "Dodatkowy kontekst",
+    associations: "Dodatkowe skojarzenia",
+    addAssociation: "Dodaj skojarzenie",
+    contextPlaceholder: "Podaj opis lub pozostaw puste...",
+    associationPlaceholder: "Np. hobby, ulubiona rzecz...",
+    promptLabels: {
+      additionalContext: "Dodatkowy kontekst",
+      associations: "Skojarzenia",
+      additionalRequirements: "Dodatkowe wymagania"
+    },
+    contextQuestions: {
+      bankingQ1: "Jakie elementy kojarzysz z finansami?",
+      bankingQ2: "Które liczby są dla Ciebie ważne w kontekście finansowym?",
+      bankingQ3: "Z jakich banków lub instytucji finansowych korzystasz?",
+      bankingQ4: "Czy masz jakieś cele finansowe lub kamienie milowe?",
+      bankingQ5: "Jakie terminy finansowe mają dla Ciebie znaczenie?",
+      emailQ1: "Jakich słów używasz najczęściej w komunikacji?",
+      emailQ2: "Co charakteryzuje Twój email?",
+      emailQ3: "Jaki jest cel tego konta email?",
+      emailQ4: "Jakiego dostawcy domeny używasz dla emaila?",
+      emailQ5: "Czy masz jakieś konkretne foldery emailowe, które są ważne?",
+      socialQ1: "Co najbardziej kojarzysz z mediami społecznościowymi, z których korzystasz?",
+      socialQ2: "Jakie są Twoje zainteresowania na platformach społecznościowych?",
+      socialQ3: "Z jakich platform mediów społecznościowych korzystasz najczęściej?",
+      socialQ4: "Z jakim rodzajem treści zwykle się angażujesz?",
+      socialQ5: "Czy masz ulubione hashtagi lub tematy?",
+      workQ1: "Jaka jest Twoja rola lub stanowisko w pracy?",
+      workQ2: "Czym zajmuje się Twoja firma/organizacja?",
+      workQ3: "Jakich narzędzi lub oprogramowania używasz w pracy?",
+      workQ4: "Jakie są Twoje cele zawodowe lub osiągnięcia?",
+      workQ5: "Jakie terminy branżowe są Ci znane?",
+      streamingQ1: "Jakie są Twoje ulubione filmy, seriale lub muzyka?",
+      streamingQ2: "Jakie gatunki oglądasz/słuchasz najczęściej?",
+      streamingQ3: "Z jakich platform streamingowych korzystasz?",
+      streamingQ4: "Kim są Twoi ulubieni aktorzy, reżyserzy lub muzycy?",
+      streamingQ5: "Jaki był ostatni program lub album, który naprawdę Ci się podobał?",
+      shoppingQ1: "Co kupujesz najczęściej online?",
+      shoppingQ2: "Jakie są Twoje ulubione marki lub sklepy?",
+      shoppingQ3: "Jakie rodzaje produktów interesują Cię najbardziej?",
+      shoppingQ4: "Czy uczestniczysz w programach lojalnościowych?",
+      shoppingQ5: "Jaki był Twój najnowszy lub najważniejszy zakup?",
+      gamingQ1: "W jakie gry grasz najczęściej?",
+      gamingQ2: "Jakie są Twoje ulubione postacie z gier?",
+      gamingQ3: "Z jakich platform lub usług gamingowych korzystasz?",
+      gamingQ4: "Jakie gatunki gier preferujesz?",
+      gamingQ5: "Z jakich osiągnięć w grach jesteś dumny?",
+      generalQ1: "Czego dotyczy aplikacja/usługa?",
+      generalQ2: "Co kojarzysz z tą usługą/stroną?",
+      generalQ3: "Jak często korzystasz z tej aplikacji?",
+      generalQ4: "Jaki jest główny cel korzystania z tej usługi?",
+      generalQ5: "Czy są jakieś konkretne funkcje, które cenisz najbardziej?"
+    },
+    crackTime: {
+      veryFast: "< 1 dzień",
+      moderate: "kilka miesięcy",
+      slow: "kilka lat",
+      veryLong: "stulecia"
     }
   },
   de: {
